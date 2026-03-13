@@ -68,7 +68,7 @@ const MovieCard = ({ movie }) => {
                                2,9.27 8.91,8.26"
               />
             </svg>
-            {movie.vote_average.toFixed(1)}
+            {movie.vote_average ? movie.vote_average.toFixed(2) : "NR"}
           </div>
         </div>
 

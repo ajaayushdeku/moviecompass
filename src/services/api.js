@@ -3,9 +3,9 @@
 //  Base URL: https://api.themoviedb.org/3
 //  Docs:     https://developer.themoviedb.org/reference/intro/getting-started
 // ─────────────────────────────────────────────────────────────────
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const BASE_URL =
-  import.meta.env.VITE_BASE_URL || "https://api.themoviedb.org/3";
+
+const API_KEY = "5b914fd415702e49b3b63fdf819a8013";
+const BASE_URL = "https://api.themoviedb.org/3";
 
 // ─────────────────────────────────────────────────────────────────
 //  HELPER
@@ -260,6 +260,7 @@ export const getPopularTvShows = async (page = 1) => {
   return {
     results: data.results,
     totalPages: data.total_pages,
+    totalResults: data.total_results,
     currentPage: data.page,
   };
 };
@@ -269,6 +270,7 @@ export const getTopRatedTvShows = async (page = 1) => {
   return {
     results: data.results,
     totalPages: data.total_pages,
+    totalResults: data.total_results,
     currentPage: data.page,
   };
 };
@@ -278,6 +280,7 @@ export const getAiringTodayTvShows = async (page = 1) => {
   return {
     results: data.results,
     totalPages: data.total_pages,
+    totalResults: data.total_results,
     currentPage: data.page,
   };
 };
@@ -287,6 +290,7 @@ export const getOnTheAirTvShows = async (page = 1) => {
   return {
     results: data.results,
     totalPages: data.total_pages,
+    totalResults: data.total_results,
     currentPage: data.page,
   };
 };
@@ -304,6 +308,7 @@ export const discoverTvShows = async ({
   return {
     results: data.results,
     totalPages: data.total_pages,
+    totalResults: data.total_results,
     currentPage: data.page,
   };
 };
@@ -320,6 +325,18 @@ export const TV_CATEGORY_FETCHERS = {
   "On The Air": getOnTheAirTvShows,
 };
 
+// ═════════════════════════════════════════════════════════════════
+//  TV Show Videos
+//
+//  WHY: TV shows from list endpoints (/airing_today, /popular etc.)
+//  do NOT include video data. You must call this separately with
+//  the show's id to get trailers, teasers and clips from YouTube.
+//  Mirrors getMovieVideos but hits the /tv/ path instead of /movie/.
+// ═════════════════════════════════════════════════════════════════
+export const getTvShowVideos = async (tvId) => {
+  const data = await apiFetch(`/tv/${tvId}/videos`);
+  return data.results ?? [];
+};
 // ═════════════════════════════════════════════════════════════════
 //  TRENDING  (works for movies, tv, or all)
 // ═════════════════════════════════════════════════════════════════
