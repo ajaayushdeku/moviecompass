@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import MovieCard from "../components/MovieCard";
 import "../css/Home.css";
 import {
@@ -35,12 +35,12 @@ const SkeletonGrid = ({ count = 10 }) => (
 /* ── Attach videos to a list of movies ── */
 const attachVideos = async (movies) =>
   Promise.all(
-    movies.map(async (m) => {
+    movies.map(async (movie) => {
       try {
-        const videos = await getMovieVideos(m.id);
-        return { ...m, videos };
+        const videos = await getMovieVideos(movie.id);
+        return { ...movie, videos };
       } catch {
-        return { ...m, videos: [] };
+        return { ...movie, videos: [] };
       }
     }),
   );
