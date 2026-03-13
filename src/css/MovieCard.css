@@ -1,0 +1,271 @@
+/* ─────────────────────────────────────────
+   MovieCard.css  – MovieCompass Netflix-style
+───────────────────────────────────────── */
+
+/* ══ CARD SHELL ══════════════════════════ */
+.movie-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-color 0.25s;
+}
+
+.movie-card:hover {
+  transform: scale(1.06) translateY(-5px);
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.75),
+    0 0 0 1.5px rgba(229, 9, 20, 0.35);
+  border-color: rgba(229, 9, 20, 0.25);
+  z-index: 5;
+}
+
+/* ══ POSTER ══════════════════════════════ */
+.movie-poster {
+  position: relative;
+  aspect-ratio: 2/3;
+  width: 100%;
+  background: #0f0f18;
+  overflow: hidden;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.movie-card:hover .movie-poster img {
+  transform: scale(1.04);
+}
+
+/* ── gradient vignette always visible ── */
+.movie-poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(8, 8, 14, 0.85) 100%
+  );
+  pointer-events: none;
+}
+
+/* ══ PLAY BUTTON ═════════════════════════ */
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+  cursor: pointer;
+}
+.movie-card:hover .play-overlay {
+  opacity: 1;
+}
+
+.play-btn-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 8px rgba(229, 9, 20, 0.18),
+    0 4px 20px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.play-btn-circle:hover {
+  background: var(--red);
+  transform: scale(1.12);
+}
+
+.play-btn-circle svg {
+  margin-left: 3px; /* optical centering for triangle */
+}
+
+/* ══ OVERLAY (favourite btn) ═════════════ */
+.movie-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+  height: 12%;
+}
+.movie-card:hover .movie-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ═══════════════════════════════════
+   FAVORITE BUTTON (Movie Card)
+   ═══════════════════════════════════ */
+
+.favorite-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  z-index: 5;
+}
+
+/* Hover state */
+.favorite-btn:hover {
+  background: rgba(229, 9, 20, 0.88);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+}
+
+/* Active (favorited) state */
+.favorite-btn.active {
+  background: rgba(229, 9, 20, 0.9);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(229, 9, 20, 0.45);
+}
+
+/* Active hover */
+.favorite-btn.active:hover {
+  background: rgb(200, 8, 18);
+  transform: scale(1.1);
+}
+
+/* Click animation */
+.favorite-btn:active {
+  transform: scale(0.95);
+}
+
+/* ══ RATING BADGE ════════════════════════ */
+.rating-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(8, 8, 14, 0.72);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #f5c518;
+  letter-spacing: 0.3px;
+}
+
+/* ══ INFO AREA ═══════════════════════════ */
+.movie-info {
+  padding: 10px 12px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.movie-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.movie-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.movie-year {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.movie-overview {
+  font-size: 0.74rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ══ RESPONSIVE ══════════════════════════ */
+@media (max-width: 768px) {
+  .play-btn-circle {
+    width: 44px;
+    height: 44px;
+  }
+  .favorite-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+  .movie-info {
+    padding: 8px 10px 11px;
+  }
+  .movie-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-overview {
+    display: none;
+  }
+  .play-btn-circle {
+    width: 40px;
+    height: 40px;
+  }
+}

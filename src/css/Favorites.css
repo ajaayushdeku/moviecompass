@@ -1,0 +1,269 @@
+/* ─────────────────────────────────────────
+   Favorites.css  – MovieCompass Netflix-style
+───────────────────────────────────────── */
+
+/* ══ PAGE SHELL ══════════════════════════ */
+.favorites-page {
+  padding-bottom: 4rem;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ══ HERO HEADER ═════════════════════════ */
+.favorites-hero {
+  position: relative;
+  padding: 4rem 5vw 3rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* atmospheric glow */
+.favorites-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 55% 60% at 15% 40%,
+      rgba(229, 9, 20, 0.09) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 80% 50% at 50% 100%,
+      rgba(8, 8, 14, 1) 0%,
+      transparent 55%
+    );
+  pointer-events: none;
+}
+
+/* dot-grid texture */
+.favorites-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  mask-image: radial-gradient(
+    ellipse 70% 80% at 10% 40%,
+    black 0%,
+    transparent 75%
+  );
+  pointer-events: none;
+}
+
+.favorites-eyebrow {
+  position: relative;
+  z-index: 1;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.05s forwards;
+}
+
+.favorites-heading {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  margin: 0 0 14px;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.12s forwards;
+}
+.favorites-heading span {
+  color: var(--red);
+}
+
+.favorites-meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.2s forwards;
+}
+
+.favorites-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(229, 9, 20, 0.14);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--red);
+  letter-spacing: 0.3px;
+}
+
+.favorites-sub {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+/* ══ DIVIDER ═════════════════════════════ */
+.favorites-divider {
+  height: 1px;
+  margin: 0 5vw 32px;
+  background: linear-gradient(
+    to right,
+    var(--red) 0%,
+    rgba(229, 9, 20, 0.25) 30%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation: fadeUp 0.4s 0.28s forwards;
+}
+
+/* ══ GRID SECTION ════════════════════════ */
+.favorites-grid-section {
+  padding: 0 5vw;
+}
+
+/* ══ EMPTY STATE ═════════════════════════ */
+.favorites-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 4rem 2rem;
+  text-align: center;
+  gap: 0;
+}
+
+.empty-icon-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 28px;
+}
+
+/* outer pulse ring */
+.empty-icon-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px solid rgba(229, 9, 20, 0.2);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+.empty-icon-inner {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.08);
+  border: 1px solid rgba(229, 9, 20, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon-inner svg {
+  opacity: 0.55;
+}
+
+.favorites-empty h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: 1.5px;
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
+.favorites-empty p {
+  font-size: 0.92rem;
+  color: var(--muted);
+  max-width: 320px;
+  line-height: 1.65;
+  margin: 0 0 28px;
+}
+
+.btn-go-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 26px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition:
+    background 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
+}
+.btn-go-home:hover {
+  background: #ff1a25;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.35);
+}
+.btn-go-home:active {
+  transform: scale(0.97);
+}
+
+/* ══ ANIMATIONS ══════════════════════════ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* ══ RESPONSIVE ══════════════════════════ */
+@media (max-width: 768px) {
+  .favorites-hero {
+    padding: 3rem 5vw 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-hero {
+    padding: 2.5rem 4vw 2rem;
+  }
+  .favorites-grid-section {
+    padding: 0 4vw;
+  }
+
+  .favorites-divider {
+    margin: 0 4vw 24px;
+  }
+}
