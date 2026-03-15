@@ -1,12 +1,31 @@
 import React, { useEffect } from "react";
+import { createPortal } from "react-dom";
 import "../css/MovieTrailerModal.css";
 
 const MovieTrailerModal = ({ movie, onClose }) => {
-  const trailer = movie.videos?.find(
-    (video) => video.type === "Trailer" && video.site === "YouTube",
-  );
+  const videos = movie.videos ?? [];
 
-  /* close on Escape */
+  // Prefer an official Trailer, fall back to Teaser, then any YouTube video
+  const trailer =
+    videos.find((v) => v.type === "Trailer" && v.site === "YouTube") ??
+    videos.find((v) => v.type === "Teaser" && v.site === "YouTube") ??
+    videos.find((v) => v.site === "YouTube");
+
+  // Label shown in the footer changes based on what we found
+  const videoLabel =
+    trailer?.type === "Trailer"
+      ? "Official Trailer"
+      : trailer?.type === "Teaser"
+        ? "Official Teaser"
+        : trailer
+          ? "Official Clip"
+          : "No Video";
+
+  // TV shows use `name`, movies use `title`
+  const displayTitle =
+    movie.title ?? movie.name ?? movie.original_name ?? "Untitled";
+
+  /* ── Close on Escape ── */
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape") {
@@ -17,15 +36,15 @@ const MovieTrailerModal = ({ movie, onClose }) => {
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  /* prevent body scroll while modal open */
+  /* ── Lock body scroll ── */
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "";
     };
   }, []);
 
-  return (
+  const modal = (
     <div className="trailer-modal" onClick={onClose}>
       <div className="trailer-dialog" onClick={(e) => e.stopPropagation()}>
         {/* ── Close ── */}
@@ -81,12 +100,14 @@ const MovieTrailerModal = ({ movie, onClose }) => {
 
         {/* ── Footer ── */}
         <div className="trailer-footer">
-          <span className="trailer-movie-title">{movie.title}</span>
-          <span className="trailer-label">Official Trailer</span>
+          <span className="trailer-movie-title">{displayTitle}</span>
+          <span className="trailer-label">{videoLabel}</span>
         </div>
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 };
 
 export default MovieTrailerModal;

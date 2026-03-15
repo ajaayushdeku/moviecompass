@@ -155,6 +155,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px 18px;
+  margin: 0;
 }
 
 .sidebar-stat-heading {
@@ -198,6 +199,10 @@
   }
   .trending-sidebar .section-header {
     grid-column: 1 / -1;
+  }
+
+  .leaderboard {
+    margin-bottom: 0px;
   }
 }
 

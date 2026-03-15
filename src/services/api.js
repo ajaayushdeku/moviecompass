@@ -337,6 +337,7 @@ export const getTvShowVideos = async (tvId) => {
   const data = await apiFetch(`/tv/${tvId}/videos`);
   return data.results ?? [];
 };
+
 // ═════════════════════════════════════════════════════════════════
 //  TRENDING  (works for movies, tv, or all)
 // ═════════════════════════════════════════════════════════════════
