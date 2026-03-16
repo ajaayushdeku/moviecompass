@@ -7,22 +7,17 @@ export const useMovieContext = () => {
 };
 
 export const MovieProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
-
-  // Load favorites from localStorage when app starts
-  useEffect(() => {
-    const storedFavs = localStorage.getItem("favorites");
-
-    if (storedFavs) {
-      try {
-        setFavorites(JSON.parse(storedFavs));
-      } catch (error) {
-        console.error("Error parsing favorites from localStorage:", error);
-      }
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const storedFavs = localStorage.getItem("favorites");
+      return storedFavs ? JSON.parse(storedFavs) : [];
+    } catch (error) {
+      console.error("Error parsing favorites:", error);
+      return [];
     }
-  }, []);
+  });
 
-  // Save favorites to localStorage whenever favorites changes
+  // Save whenever favorites changes
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);

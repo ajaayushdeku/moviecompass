@@ -312,7 +312,21 @@ const Trending = () => {
                   style={{ animationDelay: `${Math.min(i * 50, 600)}ms` }}
                 >
                   {/* big rank number behind card */}
-                  <span className="rank-badge">{i + 1}</span>
+                  <span
+                    className="rank-badge"
+                    style={{
+                      "--rank-bagde-stroke":
+                        i + 1 === 1
+                          ? "rgba(255, 216, 74, 0.94)"
+                          : i + 1 === 2
+                            ? "rgba(212, 212, 210, 0.94)"
+                            : i + 1 === 3
+                              ? "rgba(205, 127, 50, 0.94)"
+                              : "rgba(255, 0, 13, 0.65)",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
                   <MovieCard movie={content} />
                 </div>
               ))}

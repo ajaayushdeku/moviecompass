@@ -2,27 +2,62 @@ import React, { useState } from "react";
 import "../css/MovieCard.css";
 import { useMovieContext } from "../contexts/MovieContext";
 import MovieTrailerModal from "./MovieTrailerModal";
+// import nomovie from "../assets/images/no-movie.png";
+import MovieDetailModal from "./MovieDetailModal";
 
 const MovieCard = ({ movie }) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
   const [showTrailer, setShowTrailer] = useState(false);
+  const [showDetailInfo, setShowDetailInfo] = useState(false);
   const favorite = isFavorite(movie.id);
+
+  const isTv = Boolean(
+    movie.media_type === "tv" || (movie.name && !movie.title),
+  );
 
   const onFavoriteClick = (e) => {
     e.stopPropagation();
     favorite ? removeFromFavorites(movie.id) : addToFavorites(movie);
   };
 
+  const posterSrc = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : null; // Fallback image if poster_path is missing
+
   return (
     <>
       <div className="movie-card">
         {/* ── Poster ── */}
-        <div className="movie-poster">
-          <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={movie.title}
-            loading="lazy"
-          />
+        <div
+          className="movie-poster"
+          style={{
+            margin: "auto 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#0d1b2a3e",
+          }}
+        >
+          {posterSrc ? (
+            <img src={posterSrc} alt={movie.title} loading="lazy" />
+          ) : (
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ opacity: 0.2 }}
+            >
+              <rect x="2" y="2" width="20" height="20" rx="2.18" />
+              <line x1="7" y1="2" x2="7" y2="22" />
+              <line x1="17" y1="2" x2="17" y2="22" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+            </svg>
+          )}
 
           {/* Play button */}
           <div className="play-overlay">
@@ -40,6 +75,13 @@ const MovieCard = ({ movie }) => {
                 <polygon points="5,3 19,12 5,21" />
               </svg>
             </div>
+          </div>
+
+          {/* Media type badge — TV or Movie */}
+          <div
+            className={`media-badge ${isTv ? "media-badge--tv" : "media-badge--movie"}`}
+          >
+            {isTv ? "TV" : "Movie"}
           </div>
 
           {/* Overlay layer (holds favourite btn) */}
@@ -81,6 +123,36 @@ const MovieCard = ({ movie }) => {
             </span>
           </div>
           {movie.overview && <p className="movie-overview">{movie.overview}</p>}
+
+          <button
+            type="button"
+            className="more-info-btn"
+            data-movie-id={movie.id}
+            data-media-type={isTv ? "tv" : "movie"}
+            aria-label={`More info about ${movie.title}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDetailInfo(true);
+              // TODO: open MovieDetailModal — handler wired in next step
+            }}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            More Info
+          </button>
         </div>
       </div>
 
@@ -89,6 +161,13 @@ const MovieCard = ({ movie }) => {
         <MovieTrailerModal
           movie={movie}
           onClose={() => setShowTrailer(false)}
+        />
+      )}
+
+      {showDetailInfo && (
+        <MovieDetailModal
+          movie={movie}
+          onClose={() => setShowDetailInfo(false)}
         />
       )}
     </>
