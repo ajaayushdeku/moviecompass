@@ -18,11 +18,11 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+/* 
 html,
 body {
   overflow-x: hidden;
-}
+} */
 
 body {
   margin: 0;
@@ -34,8 +34,8 @@ body {
 #root {
   width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
 }
 
 a {

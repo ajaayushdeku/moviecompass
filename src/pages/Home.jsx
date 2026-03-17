@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import MovieCard from "../components/MovieCard";
 import "../css/Home.css";
 import {
@@ -13,6 +13,7 @@ import {
   getTrending,
 } from "../services/api";
 import MovieTrailerModal from "../components/MovieTrailerModal";
+import MediaIcon from "../components/MediaIcon";
 
 /* ── quick-search suggestions ── */
 const HINTS = ["Inception", "Action", "2024", "Marvel", "Horror", "Sci-Fi"];
@@ -50,7 +51,7 @@ const attachVideos = async (shows, { media_type } = {}) => {
         return getTvShowVideos(show.id);
       }
 
-      return [];
+      return Promise.resolve([]);
     }),
   );
 
@@ -65,6 +66,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [activeDropdownIndex, setActiveDropdownIndex] = useState(-1);
   const [movies, setMovies] = useState([]);
   const [topRated, setTopRated] = useState([]);
   const [trendingToday, setTrendingToday] = useState([]);
@@ -76,35 +78,40 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [nowPlayingBanner, setNowPlayingBanner] = useState(null);
   const [showTrailer, setShowTrailer] = useState(false);
+
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
+  const formRef = useRef(null);
 
-  // Handle clicks outside dropdown to close it
+  /* ── Close dropdown on outside click ── */
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (formRef.current && !formRef.current.contains(e.target)) {
         setShowDropDown(false);
+        setActiveDropdownIndex(-1);
       }
     };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  //Fetch results as user types
+  /* ── Fetch results as user types ── */
   useEffect(() => {
-    if (searchQuery.length < 2) {
+    if (searchQuery.trim().length < 2) {
       setResults([]);
       setShowDropDown(false);
+      setActiveDropdownIndex(-1);
       return;
     }
 
     const fetchResults = async () => {
       try {
-        const data = await searchMulti(searchQuery, 1);
-        setResults(data.results.slice(0, 5));
+        const data = await searchMulti(searchQuery.trim(), 1);
+        setResults(data.results.slice(0, 6));
         setShowDropDown(true);
+        setActiveDropdownIndex(-1);
       } catch (err) {
-        console.error("Search error:", err);
+        console.error("Dropdown search error:", err);
       }
     };
 
@@ -112,7 +119,7 @@ const Home = () => {
     return () => clearTimeout(debounce);
   }, [searchQuery]);
 
-  /* ── load popular on mount ── */
+  /* ── Load popular on mount ── */
   useEffect(() => {
     const loadContents = async () => {
       try {
@@ -170,6 +177,7 @@ const Home = () => {
   const handleLoadMore = async () => {
     if (loadingMore || currentPage >= totalPages) return;
     setLoadingMore(true);
+
     try {
       const nextPage = currentPage + 1;
       const data = isSearchResult
@@ -181,25 +189,36 @@ const Home = () => {
       setTotalPages(data.totalPages);
     } catch (err) {
       console.log(err);
-      setError("Failed to load more movies.");
+      setError("Failed to load more.");
     } finally {
       setLoadingMore(false);
     }
   };
 
-  /* ── Search handler ── */
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  /* ── Select a dropdown item → fill input and run search ── */
+  const handleDropdownSelect = useCallback((item) => {
+    const title = item.title ?? item.name ?? "";
+    setSearchQuery(title);
+    setShowDropDown(false);
+    setActiveDropdownIndex(-1);
+    inputRef.current?.focus();
 
-    const q = searchQuery.trim();
-    if (!q || loading) return;
+    // Trigger full search with the selected title
+    runSearch(title);
+  }, []);
+
+  /* ── Core search runner (shared by form submit + dropdown select) ── */
+  const runSearch = async (q) => {
+    const query = q.trim();
+    if (!query || loading) return;
 
     setLoading(true);
     setError(null);
-
+    setShowDropDown(false);
     try {
-      const data = await searchMulti(q, 1);
+      const data = await searchMulti(query, 1);
       const withVideos = await attachVideos(data.results);
+
       setMovies(withVideos);
       setTotalPages(data.totalPages);
       setCurrentPage(1);
@@ -212,10 +231,35 @@ const Home = () => {
     }
   };
 
+  /* ── Form submit ── */
+  const handleSearch = (e) => {
+    e.preventDefault();
+    runSearch(searchQuery);
+  };
+
+  /* ── Keyboard navigation in dropdown ── */
+  const handleKeyDown = (e) => {
+    if (!showDropDown || results.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveDropdownIndex((i) => Math.min(i + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveDropdownIndex((i) => Math.max(i - 1, -1));
+    } else if (e.key === "Enter" && activeDropdownIndex >= 0) {
+      e.preventDefault();
+      handleDropdownSelect(results[activeDropdownIndex]);
+    } else if (e.key === "Escape") {
+      setShowDropDown(false);
+      setActiveDropdownIndex(-1);
+    }
+  };
+
   /* ── Hint chip clicked ── */
   const handleHint = (hint) => {
     setSearchQuery(hint);
-    inputRef.current.focus();
+    inputRef.current?.focus();
   };
 
   /* ── clear search, reload popular ── */
@@ -224,6 +268,7 @@ const Home = () => {
     setIsSearchResult(false);
     setLoading(true);
     setError(null);
+    setShowDropDown(false);
 
     try {
       const data = await getCombinedPopular(1);
@@ -233,13 +278,12 @@ const Home = () => {
       setCurrentPage(1);
     } catch (err) {
       console.log(err);
-      setError("Failed to load movies.");
+      setError("Failed to load content.");
     } finally {
       setLoading(false);
     }
   };
 
-  console.log("Now Playing Banner Data:", nowPlayingBanner);
   const hasTrailer = nowPlayingBanner?.videos?.some(
     (v) => v.type === "Trailer" && v.site === "YouTube",
   );
@@ -264,7 +308,12 @@ const Home = () => {
         {/* ── Search bar ── */}
         <div className="search-section">
           <span id="search" />
-          <form onSubmit={handleSearch} className="search-form">
+          <form
+            ref={formRef}
+            onSubmit={handleSearch}
+            className={`search-form ${showDropDown && results.length > 0 ? "search-form--open" : ""}`}
+            autoComplete="off"
+          >
             {/* search icon */}
             <span className="search-icon">
               <svg
@@ -285,13 +334,36 @@ const Home = () => {
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search movies, tvshows, genres, years…"
+              placeholder="Search movies, tv shows, genres, years…"
               className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.length > 0 && setShowDropDown(true)}
               autoComplete="off"
+              onKeyDown={handleKeyDown}
+              aria-label="Search"
+              aria-autocomplete="list"
+              aria-expanded={showDropDown}
+              aria-controls="search-dropdown"
             />
+
+            {/* clear × button — only when there's text */}
+            {searchQuery && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                onClick={() => {
+                  setSearchQuery("");
+                  setShowDropDown(false);
+                  inputRef.current?.focus();
+                }}
+                aria-label="Clear search"
+                tabIndex={-1}
+              >
+                ✖
+              </button>
+            )}
+
             <button type="submit" className="search-button">
               <svg
                 width="16"
@@ -309,39 +381,93 @@ const Home = () => {
               <span> Search</span>
             </button>
 
+            {/* ── Dropdown ── */}
             {showDropDown && results.length > 0 && (
               <ul
-                className="dropdown"
+                id="search-dropdown"
+                className="search-dropdown"
                 ref={dropdownRef}
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  right: 0,
-                  background: "#000000",
-                  border: "1px solid #6a6a6a",
-                  borderRadius: "6px",
-                  maxHeight: "200px",
-                  overflowY: "auto",
-                  zIndex: 1000,
-                  padding: 0,
-                  margin: 0,
-                  listStyle: "none",
-                }}
+                role="listbox"
               >
-                {results.map((item) => (
-                  <li
-                    key={item.id}
-                    // onClick={() => handleSelect(item)}
-                    style={{
-                      padding: "8px 12px",
-                      cursor: "pointer",
-                      borderBottom: "1px solid #eee",
-                    }}
-                  >
-                    {item.title || item.name} ({item.media_type || "movie"})
-                  </li>
-                ))}
+                {results.map((item, idx) => {
+                  const title = item.title ?? item.name ?? "Untitled";
+                  const year = (
+                    item.release_date ??
+                    item.first_air_date ??
+                    ""
+                  ).slice("-");
+                  const type = item.media_type ?? "movie";
+                  const typeLabel = type === "tv" ? "TV" : "Movie";
+                  const poster = item.poster_path
+                    ? `https://image.tmdb.org/t/p/w92${item.poster_path}`
+                    : null;
+
+                  return (
+                    <li
+                      key={`${item.id}-${type}`}
+                      role="option"
+                      aria-selected={idx === activeDropdownIndex}
+                      className={`search-dropdown-item ${idx === activeDropdownIndex ? "search-dropdown-item--active" : ""}`}
+                      onMouseDown={(e) => {
+                        // mouseDown fires before input blur — prevent blur closing dropdown first
+                        e.preventDefault();
+                        handleDropdownSelect(item);
+                      }}
+                      onMouseEnter={() => setActiveDropdownIndex(idx)}
+                    >
+                      {/* Thumbnail */}
+                      <div className="dropdown-thumb">
+                        {poster ? (
+                          <img src={poster} alt={title} loading="lazy" />
+                        ) : (
+                          <div className="dropdown-thumb-placeholder">
+                            <svg
+                              width="14"
+                              height="14"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              style={{ opacity: 0.3 }}
+                            >
+                              <rect
+                                x="2"
+                                y="2"
+                                width="20"
+                                height="20"
+                                rx="2.18"
+                              />
+                              <line x1="7" y1="2" x2="7" y2="22" />
+                              <line x1="17" y1="2" x2="17" y2="22" />
+                              <line x1="2" y1="12" x2="22" y2="12" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Text */}
+                      <div className="dropdown-text">
+                        <span className="dropdown-title">{title}</span>
+                        {year && <span className="dropdown-year">{year}</span>}
+                      </div>
+
+                      {/* Type badge */}
+                      <span
+                        className={`dropdown-type-badge dropdown-type-badge--${type}`}
+                      >
+                        <MediaIcon type={type} />
+                        {typeLabel}
+                      </span>
+                    </li>
+                  );
+                })}
+
+                {/* Footer hint */}
+                <li className="search-dropdown-footer" aria-hidden="true">
+                  Press <kbd>↵</kbd> to search all results
+                </li>
               </ul>
             )}
           </form>

@@ -4,6 +4,7 @@ import { useMovieContext } from "../contexts/MovieContext";
 import MovieTrailerModal from "./MovieTrailerModal";
 // import nomovie from "../assets/images/no-movie.png";
 import MovieDetailModal from "./MovieDetailModal";
+import MediaIcon from "./MediaIcon";
 
 const MovieCard = ({ movie }) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
@@ -81,8 +82,14 @@ const MovieCard = ({ movie }) => {
           <div
             className={`media-badge ${isTv ? "media-badge--tv" : "media-badge--movie"}`}
           >
+            <MediaIcon type={isTv ? "tv" : "movie"} />
             {isTv ? "TV" : "Movie"}
           </div>
+
+          {/* <span className={`dropdown-type-badge dropdown-type-badge--${type}`}>
+            <MediaIcon type={type} />
+            {typeLabel}
+          </span> */}
 
           {/* Overlay layer (holds favourite btn) */}
           <div className="movie-overlay">

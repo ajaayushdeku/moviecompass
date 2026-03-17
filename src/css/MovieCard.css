@@ -275,15 +275,20 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 1px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 3px 7px;
   border-radius: 5px;
   backdrop-filter: blur(4px);
   pointer-events: none;
   z-index: 3;
   color: #fff;
+  text-transform: uppercase;
 }
 .media-badge--tv {
   background: rgba(59, 130, 246, 0.85); /* blue for TV */

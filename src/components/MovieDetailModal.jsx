@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useMovieContext } from "../contexts/MovieContext";
 import "../css/MovieDetailModal.css";
+import MediaIcon from "./MediaIcon";
 
 /* ─────────────────────────────────────────────────────────────────
    MovieDetailModal
@@ -159,7 +160,10 @@ const MovieDetailModal = ({ movie, onClose }) => {
           <div className="detail-info">
             {/* Media type badge + year */}
             <div className="detail-meta-top">
-              <span className={`detail-badge ${mediaClass}`}>{mediaLabel}</span>
+              <span className={`detail-badge ${mediaClass}`}>
+                <MediaIcon type={isTv ? "tv" : "movie"} />
+                {mediaLabel}
+              </span>
               {releaseYear && (
                 <span className="detail-year">{releaseYear}</span>
               )}

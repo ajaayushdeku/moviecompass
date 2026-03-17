@@ -51,7 +51,7 @@ const NavBar = () => {
   }, [drawerOpen]);
 
   return (
-    <>
+    <section>
       <nav className="navbar">
         {/* ── Left ── */}
         <div className="navbar-left">
@@ -127,7 +127,7 @@ const NavBar = () => {
           ))}
         </div>
       )}
-    </>
+    </section>
   );
 };
 
