@@ -1,201 +1,349 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import MovieCard from "../components/MovieCard";
 import "../css/PagesShared.css";
 import "../css/Genres.css";
+import {
+  getAllGenres,
+  getCombinedContentByGenre,
+  getMoviesByGenre,
+  getMovieVideos,
+  getTvByGenre,
+  getTvShowVideos,
+} from "../services/api";
 
-/* ── Genre data (UI only) ── */
 const GENRE_TABS = ["All", "Movies", "TV Shows"];
 
-const GENRES = [
-  {
-    id: 1,
-    name: "Action",
+const GENRE_VISUAL = {
+  Action: {
     icon: "💥",
-    count: "2,840",
-    gradient: "linear-gradient(135deg, #1a0505 0%, #3d0a0a 100%)",
+    gradient: "linear-gradient(135deg,#1a0505,#3d0a0a)",
     accent: "#e50914",
   },
-  {
-    id: 2,
-    name: "Comedy",
-    icon: "😂",
-    count: "3,120",
-    gradient: "linear-gradient(135deg, #0a1a05 0%, #1a3d0a 100%)",
-    accent: "#22c55e",
-  },
-  {
-    id: 3,
-    name: "Drama",
-    icon: "🎭",
-    count: "4,560",
-    gradient: "linear-gradient(135deg, #050a1a 0%, #0a1a3d 100%)",
-    accent: "#3b82f6",
-  },
-  {
-    id: 4,
-    name: "Horror",
-    icon: "👻",
-    count: "1,230",
-    gradient: "linear-gradient(135deg, #0a0a0a 0%, #1a0520 100%)",
-    accent: "#a855f7",
-  },
-  {
-    id: 5,
-    name: "Sci-Fi",
-    icon: "🚀",
-    count: "1,870",
-    gradient: "linear-gradient(135deg, #05101a 0%, #0a2030 100%)",
-    accent: "#06b6d4",
-  },
-  {
-    id: 6,
-    name: "Romance",
-    icon: "❤️",
-    count: "2,100",
-    gradient: "linear-gradient(135deg, #1a0510 0%, #3d0a20 100%)",
-    accent: "#ec4899",
-  },
-  {
-    id: 7,
-    name: "Thriller",
-    icon: "🔍",
-    count: "1,650",
-    gradient: "linear-gradient(135deg, #0d0d05 0%, #1a1a05 100%)",
-    accent: "#eab308",
-  },
-  {
-    id: 8,
-    name: "Animation",
-    icon: "🎨",
-    count: "980",
-    gradient: "linear-gradient(135deg, #1a100a 0%, #3d200a 100%)",
-    accent: "#f97316",
-  },
-  {
-    id: 9,
-    name: "Documentary",
-    icon: "🎥",
-    count: "2,340",
-    gradient: "linear-gradient(135deg, #0a0f0a 0%, #101a10 100%)",
-    accent: "#84cc16",
-  },
-  {
-    id: 10,
-    name: "Fantasy",
-    icon: "🧙",
-    count: "1,420",
-    gradient: "linear-gradient(135deg, #0a0a1a 0%, #15053d 100%)",
-    accent: "#8b5cf6",
-  },
-  {
-    id: 11,
-    name: "Crime",
-    icon: "🕵️",
-    count: "1,760",
-    gradient: "linear-gradient(135deg, #0f0a05 0%, #1a1005 100%)",
-    accent: "#d97706",
-  },
-  {
-    id: 12,
-    name: "Adventure",
+  Adventure: {
     icon: "🌍",
-    count: "2,050",
-    gradient: "linear-gradient(135deg, #051a0a 0%, #0a3d1a 100%)",
+    gradient: "linear-gradient(135deg,#051a0a,#0a3d1a)",
     accent: "#10b981",
   },
-];
+  "Action & Adventure": {
+    icon: "🔥",
+    gradient: "linear-gradient(135deg,#1a0a05,#3d1a0a)",
+    accent: "#f97316",
+  },
+  Animation: {
+    icon: "🎨",
+    gradient: "linear-gradient(135deg,#1a100a,#3d200a)",
+    accent: "#f97316",
+  },
+  Comedy: {
+    icon: "😂",
+    gradient: "linear-gradient(135deg,#0a1a05,#1a3d0a)",
+    accent: "#22c55e",
+  },
+  Crime: {
+    icon: "🕵️",
+    gradient: "linear-gradient(135deg,#0f0a05,#1a1005)",
+    accent: "#d97706",
+  },
+  Documentary: {
+    icon: "🎥",
+    gradient: "linear-gradient(135deg,#0a0f0a,#101a10)",
+    accent: "#84cc16",
+  },
+  Drama: {
+    icon: "🎭",
+    gradient: "linear-gradient(135deg,#050a1a,#0a1a3d)",
+    accent: "#3b82f6",
+  },
+  Family: {
+    icon: "👨‍👩‍👧",
+    gradient: "linear-gradient(135deg,#051a10,#0a3d20)",
+    accent: "#059669",
+  },
+  Fantasy: {
+    icon: "🧙",
+    gradient: "linear-gradient(135deg,#0a0a1a,#15053d)",
+    accent: "#8b5cf6",
+  },
+  History: {
+    icon: "📜",
+    gradient: "linear-gradient(135deg,#1a1205,#3d2a0a)",
+    accent: "#ca8a04",
+  },
+  Horror: {
+    icon: "👻",
+    gradient: "linear-gradient(135deg,#0a0a0a,#1a0520)",
+    accent: "#a855f7",
+  },
+  Music: {
+    icon: "🎵",
+    gradient: "linear-gradient(135deg,#10051a,#20053d)",
+    accent: "#d946ef",
+  },
+  Mystery: {
+    icon: "🌀",
+    gradient: "linear-gradient(135deg,#05100a,#0a1a15)",
+    accent: "#14b8a6",
+  },
+  Romance: {
+    icon: "❤️",
+    gradient: "linear-gradient(135deg,#1a0510,#3d0a20)",
+    accent: "#ec4899",
+  },
+  "Science Fiction": {
+    icon: "🚀",
+    gradient: "linear-gradient(135deg,#05101a,#0a2030)",
+    accent: "#06b6d4",
+  },
+  "Sci-Fi & Fantasy": {
+    icon: "🚀",
+    gradient: "linear-gradient(135deg,#05101a,#0a2030)",
+    accent: "#06b6d4",
+  },
+  Thriller: {
+    icon: "🔍",
+    gradient: "linear-gradient(135deg,#0d0d05,#1a1a05)",
+    accent: "#eab308",
+  },
+  War: {
+    icon: "⚔️",
+    gradient: "linear-gradient(135deg,#0f0f0f,#1a0a0a)",
+    accent: "#6b7280",
+  },
+  "War & Politics": {
+    icon: "🏛️",
+    gradient: "linear-gradient(135deg,#0f0f12,#1a1a25)",
+    accent: "#64748b",
+  },
+  Western: {
+    icon: "🤠",
+    gradient: "linear-gradient(135deg,#1a1005,#3d2005)",
+    accent: "#b45309",
+  },
 
-/* ── Single genre card ── */
-const GenreCard = ({ genre, delay }) => (
-  <div
-    className="genre-card"
-    style={{
-      animationDelay: `${delay}ms`,
-      opacity: 0,
-      animation: `fadeUp 0.45s ${delay}ms forwards`,
-    }}
-  >
-    {/* coloured gradient bg */}
-    <div className="genre-card-bg" style={{ background: genre.gradient }} />
+  // TV specific genres
+  "TV Movie": {
+    icon: "📺",
+    gradient: "linear-gradient(135deg,#0a0f1a,#1a2a3d)",
+    accent: "#60a5fa",
+  },
+  Kids: {
+    icon: "🧸",
+    gradient: "linear-gradient(135deg,#0a1a15,#0a3d2a)",
+    accent: "#34d399",
+  },
+  News: {
+    icon: "📰",
+    gradient: "linear-gradient(135deg,#0a0f1a,#1a253d)",
+    accent: "#3b82f6",
+  },
+  Reality: {
+    icon: "📡",
+    gradient: "linear-gradient(135deg,#1a0f05,#3d200a)",
+    accent: "#f59e0b",
+  },
+  Soap: {
+    icon: "🫧",
+    gradient: "linear-gradient(135deg,#1a0515,#3d0a2a)",
+    accent: "#f472b6",
+  },
+  Talk: {
+    icon: "🎤",
+    gradient: "linear-gradient(135deg,#0a0a1a,#1a1a3d)",
+    accent: "#818cf8",
+  },
 
-    {/* diagonal stripe texture */}
-    <div className="genre-card-texture" style={{ borderColor: genre.accent }} />
+  default: {
+    icon: "🎬",
+    gradient: "linear-gradient(135deg,#0f0f18,#1a1a2a)",
+    accent: "#e50914",
+  },
+};
 
-    <div className="genre-card-overlay" />
+const getVisual = (name) => GENRE_VISUAL[name] ?? GENRE_VISUAL.default;
 
-    <div className="genre-card-body">
-      <span className="genre-card-icon">{genre.icon}</span>
-      <h3 className="genre-card-name">{genre.name}</h3>
-      <p className="genre-card-count">{genre.count} titles</p>
-    </div>
-
-    {/* hover arrow */}
-    <div className="genre-card-arrow" style={{ background: genre.accent }}>
-      <svg
-        width="10"
-        height="10"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+/* ── Skeleton ── */
+const SkeletonGrid = ({ count = 12 }) => (
+  <div className="skeleton-grid">
+    {Array.from({ length: count }).map((_, i) => (
+      <div
+        className="skeleton-card"
+        key={i}
+        style={{ animationDelay: `${i * 35}ms` }}
       >
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </div>
-
-    {/* accent bottom line */}
-    <div
-      className="genre-card-accent-bar"
-      style={{ background: genre.accent }}
-    />
+        <div className="skeleton-poster" />
+        <div className="skeleton-info">
+          <div className="skeleton-line medium" />
+          <div className="skeleton-line short" />
+        </div>
+      </div>
+    ))}
   </div>
 );
 
-/* ── Featured genre strip (large banner cards) ── */
-const FeaturedStrip = () => {
-  const featured = GENRES.slice(0, 3);
+/* ── Single genre card ── */
+const GenreCard = ({ genre, isActive, onClick, delay }) => {
+  const v = getVisual(genre.name);
   return (
-    <div className="featured-genre-strip">
-      {featured.map((genre, i) => (
-        <div
-          key={genre.id}
-          className="featured-genre-card"
-          style={{
-            animationDelay: `${i * 80}ms`,
-            opacity: 0,
-            animation: `fadeUp 0.5s ${i * 80}ms forwards`,
-          }}
+    <div
+      className={`genre-card ${isActive ? "genre-selected-card" : ""}`}
+      style={{
+        opacity: 0,
+        animation: `fadeUp 0.45s ${delay}ms forwards`,
+        cursor: "pointer",
+      }}
+      onClick={onClick}
+    >
+      <div className="genre-card-bg" style={{ background: v.gradient }} />
+      <div className="genre-card-texture" style={{ borderColor: v.accent }} />
+      <div className="genre-card-overlay" />
+      <div className="genre-card-body">
+        <span className="genre-card-icon">{v.icon}</span>
+        <h3 className="genre-card-name">{genre.name}</h3>
+      </div>
+      <div className="genre-card-arrow" style={{ background: v.accent }}>
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <div
-            className="featured-genre-bg"
-            style={{ background: genre.gradient }}
-          />
-          <div className="featured-genre-overlay" />
-
-          <div className="featured-genre-body">
-            <span className="featured-genre-icon">{genre.icon}</span>
-            <div>
-              <h3 className="featured-genre-name">{genre.name}</h3>
-              <p className="featured-genre-count">{genre.count} titles</p>
-            </div>
-          </div>
-
-          <div
-            className="featured-genre-bar"
-            style={{
-              background: `linear-gradient(to right, ${genre.accent}, transparent)`,
-            }}
-          />
-        </div>
-      ))}
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </div>
+      <div className="genre-card-accent-bar" style={{ background: v.accent }} />
     </div>
   );
 };
 
+/* ── Normalize TV so MovieCard works ── */
+const normalizeTv = (item) => ({
+  ...item,
+  title: item.name ?? item.original_name ?? item.title,
+  release_date: item.first_air_date ?? item.release_date,
+  videos: [],
+  media_type: "tv",
+});
+
+/* ── Fetch videos for every show and attach via spread ──────────────*/
+const attachVideos = async (shows) => {
+  const results = await Promise.all(
+    shows.map((show) => {
+      if (show.media_type === "tv") {
+        return getTvShowVideos(show.id);
+      } else {
+        return getMovieVideos(show.id);
+      }
+    }),
+  );
+
+  return shows.map((show, i) => ({
+    ...show,
+    videos: results[i],
+  }));
+};
+
 const Genres = () => {
+  const [genres, setGenres] = useState([]);
   const [activeTab, setActiveTab] = useState("All");
-  const [activeGenre, setActiveGenre] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [results, setResults] = useState([]);
+  const [loadingGenres, setLoadingGenres] = useState(true);
+  const [loadingResults, setLoadingResults] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  /* ── Load genres on mount ── */
+  useEffect(() => {
+    getAllGenres()
+      .then(setGenres)
+      .catch(() => setError("Failed to load genres."))
+      .finally(() => setLoadingGenres(false));
+  }, []);
+
+  /* ── Fetch titles for selected genre ── */
+  const fetchResults = useCallback(
+    async (genreId, tab, page = 1, append = false) => {
+      page === 1 ? setLoadingResults(true) : setLoadingMore(true);
+      setError(null);
+      try {
+        let data;
+        if (tab === "TV Shows") {
+          data = await getTvByGenre(genreId, page);
+          const normalized = data.results.map(normalizeTv);
+          const withVideos = await attachVideos(normalized);
+          setResults((prev) =>
+            append ? [...prev, ...withVideos] : withVideos,
+          );
+        } else if (tab === "Movies") {
+          // "All" and "Movies" both use movies endpoint (closest to /discover/movie)
+          data = await getMoviesByGenre(genreId, page);
+          const withVideos = await attachVideos(data.results);
+          setResults((prev) =>
+            append ? [...prev, ...withVideos] : withVideos,
+          );
+        } else {
+          data = await getCombinedContentByGenre(genreId, page);
+          const normalized = data.results
+            .slice(0, 12)
+            .map((item) =>
+              item.media_type === "tv" ? normalizeTv(item) : item,
+            );
+          const withVideos = await attachVideos(normalized);
+          setResults((prev) =>
+            append ? [...prev, ...withVideos] : withVideos,
+          );
+        }
+
+        setTotalPages(data.totalPages);
+        setCurrentPage(data.currentPage);
+      } catch (err) {
+        setError("Failed to load titles for this genre.");
+        console.error(err);
+      } finally {
+        setLoadingResults(false);
+        setLoadingMore(false);
+      }
+    },
+    [],
+  );
+
+  /* ── Re-fetch when tab changes while a genre is selected ── */
+  useEffect(() => {
+    if (selectedGenre) fetchResults(selectedGenre.id, activeTab, 1, false);
+  }, [activeTab, fetchResults, selectedGenre]);
+
+  const handleGenreClick = (genre) => {
+    if (selectedGenre?.id === genre.id) {
+      // Deselect
+      setSelectedGenre(null);
+      setResults([]);
+    } else {
+      setSelectedGenre(genre);
+      fetchResults(genre.id, activeTab, 1, false);
+      // Scroll to results
+      setTimeout(() => {
+        document
+          .getElementById("genre-results")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (selectedGenre)
+      fetchResults(selectedGenre.id, activeTab, currentPage + 1, true);
+  };
+
+  /* ── Filter genres by tab ── */
+  // TMDB genre IDs: movie-only IDs don't appear in TV list and vice versa
+  // We keep all and just change the fetch source based on tab
+  const displayedGenres = genres;
 
   return (
     <div className="page genres-page">
@@ -226,23 +374,60 @@ const Genres = () => {
         ))}
       </div>
 
-      {/* ══ FEATURED STRIP ════════════════ */}
-      <div
-        style={{
-          padding: "0 5vw",
-          marginBottom: 36,
-          opacity: 0,
-          animation: "fadeUp 0.5s 0.3s forwards",
-        }}
-      >
+      {/* ══ FEATURED STRIP (top 3) ════════ */}
+      {!loadingGenres && genres.length >= 3 && (
         <div
-          className="section-header"
-          style={{ padding: 0, marginBottom: 18 }}
+          style={{
+            padding: "0 5vw",
+            marginBottom: 36,
+            opacity: 0,
+            animation: "fadeUp 0.5s 0.3s forwards",
+          }}
         >
-          <h2 className="section-title">🌟 Featured</h2>
+          <div
+            className="section-header"
+            style={{ padding: 0, marginBottom: 18 }}
+          >
+            <h2 className="section-title">🌟 Featured</h2>
+          </div>
+          <div className="featured-genre-strip">
+            {genres.slice(0, 3).map((genre, i) => {
+              const v = getVisual(genre.name);
+              return (
+                <div
+                  key={genre.id}
+                  className="featured-genre-card"
+                  style={{
+                    animationDelay: `${i * 80}ms`,
+                    opacity: 0,
+                    animation: `fadeUp 0.5s ${i * 80}ms forwards`,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleGenreClick(genre)}
+                >
+                  <div
+                    className="featured-genre-bg"
+                    style={{ background: v.gradient }}
+                  />
+                  <div className="featured-genre-overlay" />
+                  <div className="featured-genre-body">
+                    <span className="featured-genre-icon">{v.icon}</span>
+                    <div>
+                      <h3 className="featured-genre-name">{genre.name}</h3>
+                    </div>
+                  </div>
+                  <div
+                    className="featured-genre-bar"
+                    style={{
+                      background: `linear-gradient(to right, ${v.accent}, transparent)`,
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <FeaturedStrip />
-      </div>
+      )}
 
       {/* ══ ALL GENRES GRID ═══════════════ */}
       <div style={{ padding: "0 5vw" }}>
@@ -251,23 +436,160 @@ const Genres = () => {
           style={{ padding: 0, marginBottom: 18 }}
         >
           <h2 className="section-title">All Genres</h2>
-          <span className="sort-label">{GENRES.length} categories</span>
+          <span className="sort-label">
+            {loadingGenres ? "…" : `${displayedGenres.length} categories`}
+          </span>
         </div>
 
-        <div className="genres-grid">
-          {GENRES.map((genre, i) => (
-            <div
-              key={genre.id}
-              onClick={() =>
-                setActiveGenre(activeGenre === genre.id ? null : genre.id)
-              }
-              className={activeGenre === genre.id ? "genre-selected" : ""}
-            >
-              <GenreCard genre={genre} delay={Math.min(i * 50, 700)} />
-            </div>
-          ))}
-        </div>
+        {loadingGenres ? (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+              gap: 14,
+            }}
+          >
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  borderRadius: 12,
+                  aspectRatio: "16/9",
+                  background: "var(--card)",
+                  border: "1px solid var(--border)",
+                  animation: "shimmer 1.5s infinite",
+                  backgroundSize: "200% 100%",
+                  backgroundImage:
+                    "linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 75%)",
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="genres-grid">
+            {displayedGenres.map((genre, i) => (
+              <GenreCard
+                key={genre.id}
+                genre={genre}
+                isActive={selectedGenre?.id === genre.id}
+                onClick={() => handleGenreClick(genre)}
+                delay={Math.min(i * 45, 700)}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* ══ RESULTS SECTION ═══════════════ */}
+      {selectedGenre && (
+        <div id="genre-results" style={{ padding: "48px 5vw 0" }}>
+          <div
+            style={{
+              height: 1,
+              background: "linear-gradient(to right, var(--red), transparent)",
+              marginBottom: 32,
+            }}
+          />
+          <div
+            className="section-header"
+            style={{ padding: 0, marginBottom: 22 }}
+          >
+            <h2 className="section-title">
+              {getVisual(selectedGenre.name).icon} {selectedGenre.name}
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.78rem",
+                  color: "var(--muted)",
+                  letterSpacing: "normal",
+                  marginLeft: 12,
+                  fontWeight: 400,
+                }}
+              >
+                {activeTab === "TV Shows" ? "TV Shows" : "Movies"}
+              </span>
+            </h2>
+            <button
+              onClick={() => {
+                setSelectedGenre(null);
+                setResults([]);
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--red)",
+                cursor: "pointer",
+                fontSize: "0.78rem",
+                fontFamily: "var(--font-body)",
+              }}
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          {error && (
+            <div className="error-banner" style={{ marginBottom: 24 }}>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+              </svg>
+              {error}
+            </div>
+          )}
+
+          {loadingResults ? (
+            <SkeletonGrid count={12} />
+          ) : results.length === 0 ? (
+            <div className="empty-state" style={{ padding: "3rem 0" }}>
+              <h3>No titles found</h3>
+              <p>Try switching between Movies and TV Shows above.</p>
+            </div>
+          ) : (
+            <>
+              <div className="page-grid">
+                {results.map((item, i) => (
+                  <div
+                    key={`${item.id}-${i}`}
+                    style={{ animationDelay: `${Math.min(i * 40, 600)}ms` }}
+                  >
+                    <MovieCard movie={item} />
+                  </div>
+                ))}
+              </div>
+              {currentPage < totalPages && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "32px 0 8px",
+                  }}
+                >
+                  <button
+                    className="load-more-btn"
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore ? (
+                      <span className="load-more-spinner" />
+                    ) : (
+                      <>Load More</>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

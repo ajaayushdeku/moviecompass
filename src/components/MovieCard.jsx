@@ -86,11 +86,6 @@ const MovieCard = ({ movie }) => {
             {isTv ? "TV" : "Movie"}
           </div>
 
-          {/* <span className={`dropdown-type-badge dropdown-type-badge--${type}`}>
-            <MediaIcon type={type} />
-            {typeLabel}
-          </span> */}
-
           {/* Overlay layer (holds favourite btn) */}
           <div className="movie-overlay">
             <button

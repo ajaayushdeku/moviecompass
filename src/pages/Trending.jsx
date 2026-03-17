@@ -158,7 +158,7 @@ const Trending = () => {
     [mediaType, timeWindow],
   );
 
-  console.log("Media Type:", mediaType, "Time Window:", timeWindow);
+  // console.log("Media Type:", mediaType, "Time Window:", timeWindow);
 
   useEffect(() => {
     loadTrendingShows(1, false);

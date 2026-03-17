@@ -418,6 +418,20 @@ export const getCombinedTopRated = async (page = 1) => {
   };
 };
 
+export const getCombinedContentByGenre = async (genreId, page = 1) => {
+  const [movies, tvShows] = await Promise.all([
+    getMoviesByGenre(genreId, page),
+    getTvByGenre(genreId, page),
+  ]);
+  return {
+    results: interleave(movies.results, tvShows.results),
+    moviePages: movies.totalPages,
+    tvPages: tvShows.totalPages,
+    totalPages: Math.max(movies.totalPages, tvShows.totalPages),
+    currentPage: page,
+  };
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 6 · GENRES
 // ─────────────────────────────────────────────────────────────────────────────
