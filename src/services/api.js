@@ -520,3 +520,44 @@ export const TV_CATEGORY_FETCHERS = {
   "Airing Today": getAiringTodayTvShows,
   "On The Air": getOnTheAirTvShows,
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SECTION 8 · PEOPLE / ACTORS
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── 8a. Search People ────────────────────────────────────────────────────────
+//  Full-text search across TMDB's people catalogue.
+//  Returns actors, directors, crew members etc.
+//  Each result includes profile_path, known_for[] (up to 3 titles),
+//  known_for_department, and popularity score.
+export const searchPeople = async (query, page = 1) =>
+  paginated(
+    await apiFetch("/search/person", {
+      query: encodeURIComponent(query),
+      page,
+    }),
+  );
+
+// ── 8b. Person Details ───────────────────────────────────────────────────────
+//  Full details for a single person by their TMDB person ID.
+//  append_to_response bundles two sub-requests into one network call:
+//    combined_credits → all movie + TV credits in one array (each item
+//                       has a media_type field: "movie" | "tv")
+//    images           → all available profile photos
+export const getPersonDetails = async (personId) => {
+  const data = await apiFetch(`/person/${personId}`, {
+    append_to_response: "combined_credits,images",
+  });
+  return {
+    ...data,
+    credits: data.combined_credits?.cast ?? [], // roles they acted in
+    crew: data.combined_credits?.crew ?? [], // roles behind the camera
+    images: data.images?.profiles ?? [],
+  };
+};
+
+// ── 8c. Popular People ───────────────────────────────────────────────────────
+//  TMDB's current popular people list — sorted by TMDB popularity score.
+//  Good for a default "discover actors" state when no search has been run.
+export const getPopularPeople = async (page = 1) =>
+  paginated(await apiFetch("/person/popular", { page }));

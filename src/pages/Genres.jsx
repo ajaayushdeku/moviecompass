@@ -16,149 +16,147 @@ const GENRE_TABS = ["All", "Movies", "TV Shows"];
 const GENRE_VISUAL = {
   Action: {
     icon: "💥",
-    gradient: "linear-gradient(135deg,#1a0505,#3d0a0a)",
+    gradient: "linear-gradient(135deg, #1a0505 0%, #3d0a0a 100%)",
     accent: "#e50914",
   },
   Adventure: {
     icon: "🌍",
-    gradient: "linear-gradient(135deg,#051a0a,#0a3d1a)",
+    gradient: "linear-gradient(135deg, #051a0a 0%, #0a3d1a 100%)",
     accent: "#10b981",
-  },
-  "Action & Adventure": {
-    icon: "🔥",
-    gradient: "linear-gradient(135deg,#1a0a05,#3d1a0a)",
-    accent: "#f97316",
   },
   Animation: {
     icon: "🎨",
-    gradient: "linear-gradient(135deg,#1a100a,#3d200a)",
+    gradient: "linear-gradient(135deg, #1a100a 0%, #3d200a 100%)",
     accent: "#f97316",
   },
   Comedy: {
     icon: "😂",
-    gradient: "linear-gradient(135deg,#0a1a05,#1a3d0a)",
+    gradient: "linear-gradient(135deg, #0a1a05 0%, #1a3d0a 100%)",
     accent: "#22c55e",
   },
   Crime: {
     icon: "🕵️",
-    gradient: "linear-gradient(135deg,#0f0a05,#1a1005)",
+    gradient: "linear-gradient(135deg, #0f0a05 0%, #1a1005 100%)",
     accent: "#d97706",
   },
   Documentary: {
     icon: "🎥",
-    gradient: "linear-gradient(135deg,#0a0f0a,#101a10)",
+    gradient: "linear-gradient(135deg, #0a0f0a 0%, #101a10 100%)",
     accent: "#84cc16",
   },
   Drama: {
     icon: "🎭",
-    gradient: "linear-gradient(135deg,#050a1a,#0a1a3d)",
+    gradient: "linear-gradient(135deg, #050a1a 0%, #0a1a3d 100%)",
     accent: "#3b82f6",
   },
   Family: {
     icon: "👨‍👩‍👧",
-    gradient: "linear-gradient(135deg,#051a10,#0a3d20)",
+    gradient: "linear-gradient(135deg, #051a10 0%, #0a3d20 100%)",
     accent: "#059669",
   },
   Fantasy: {
     icon: "🧙",
-    gradient: "linear-gradient(135deg,#0a0a1a,#15053d)",
+    gradient: "linear-gradient(135deg, #0a0a1a 0%, #15053d 100%)",
     accent: "#8b5cf6",
   },
   History: {
     icon: "📜",
-    gradient: "linear-gradient(135deg,#1a1205,#3d2a0a)",
+    gradient: "linear-gradient(135deg, #1a1205 0%, #3d2a0a 100%)",
     accent: "#ca8a04",
   },
   Horror: {
     icon: "👻",
-    gradient: "linear-gradient(135deg,#0a0a0a,#1a0520)",
+    gradient: "linear-gradient(135deg, #0a0a0a 0%, #1a0520 100%)",
     accent: "#a855f7",
   },
   Music: {
     icon: "🎵",
-    gradient: "linear-gradient(135deg,#10051a,#20053d)",
+    gradient: "linear-gradient(135deg, #10051a 0%, #20053d 100%)",
     accent: "#d946ef",
   },
   Mystery: {
     icon: "🌀",
-    gradient: "linear-gradient(135deg,#05100a,#0a1a15)",
+    gradient: "linear-gradient(135deg, #05100a 0%, #0a1a15 100%)",
     accent: "#14b8a6",
   },
   Romance: {
     icon: "❤️",
-    gradient: "linear-gradient(135deg,#1a0510,#3d0a20)",
+    gradient: "linear-gradient(135deg, #1a0510 0%, #3d0a20 100%)",
     accent: "#ec4899",
   },
   "Science Fiction": {
     icon: "🚀",
-    gradient: "linear-gradient(135deg,#05101a,#0a2030)",
+    gradient: "linear-gradient(135deg, #05101a 0%, #0a2030 100%)",
     accent: "#06b6d4",
   },
-  "Sci-Fi & Fantasy": {
-    icon: "🚀",
-    gradient: "linear-gradient(135deg,#05101a,#0a2030)",
-    accent: "#06b6d4",
+  "TV Movie": {
+    icon: "📺",
+    gradient: "linear-gradient(135deg, #0a0f1a 0%, #101a2a 100%)",
+    accent: "#6366f1",
   },
   Thriller: {
     icon: "🔍",
-    gradient: "linear-gradient(135deg,#0d0d05,#1a1a05)",
+    gradient: "linear-gradient(135deg, #0d0d05 0%, #1a1a05 100%)",
     accent: "#eab308",
   },
   War: {
     icon: "⚔️",
-    gradient: "linear-gradient(135deg,#0f0f0f,#1a0a0a)",
+    gradient: "linear-gradient(135deg, #0f0f0f 0%, #1a0a0a 100%)",
     accent: "#6b7280",
-  },
-  "War & Politics": {
-    icon: "🏛️",
-    gradient: "linear-gradient(135deg,#0f0f12,#1a1a25)",
-    accent: "#64748b",
   },
   Western: {
     icon: "🤠",
-    gradient: "linear-gradient(135deg,#1a1005,#3d2005)",
+    gradient: "linear-gradient(135deg, #1a1005 0%, #3d2005 100%)",
     accent: "#b45309",
   },
-
-  // TV specific genres
-  "TV Movie": {
-    icon: "📺",
-    gradient: "linear-gradient(135deg,#0a0f1a,#1a2a3d)",
-    accent: "#60a5fa",
+  "Action & Adventure": {
+    icon: "🔥",
+    gradient: "linear-gradient(135deg, #1a0a05 0%, #3d1505 100%)",
+    accent: "#f97316",
   },
   Kids: {
     icon: "🧸",
-    gradient: "linear-gradient(135deg,#0a1a15,#0a3d2a)",
+    gradient: "linear-gradient(135deg, #0a1a10 0%, #1a3d20 100%)",
     accent: "#34d399",
   },
   News: {
     icon: "📰",
-    gradient: "linear-gradient(135deg,#0a0f1a,#1a253d)",
-    accent: "#3b82f6",
+    gradient: "linear-gradient(135deg, #0a0a0f 0%, #14141e 100%)",
+    accent: "#94a3b8",
   },
   Reality: {
-    icon: "📡",
-    gradient: "linear-gradient(135deg,#1a0f05,#3d200a)",
-    accent: "#f59e0b",
+    icon: "🎬",
+    gradient: "linear-gradient(135deg, #1a050a 0%, #3d0a15 100%)",
+    accent: "#fb7185",
   },
-  Soap: {
-    icon: "🫧",
-    gradient: "linear-gradient(135deg,#1a0515,#3d0a2a)",
-    accent: "#f472b6",
-  },
-  Talk: {
-    icon: "🎤",
-    gradient: "linear-gradient(135deg,#0a0a1a,#1a1a3d)",
+  "Sci-Fi & Fantasy": {
+    icon: "🌌",
+    gradient: "linear-gradient(135deg, #05051a 0%, #0a0a3d 100%)",
     accent: "#818cf8",
   },
+  Soap: {
+    icon: "💫",
+    gradient: "linear-gradient(135deg, #1a0515 0%, #3d0a30 100%)",
+    accent: "#e879f9",
+  },
+  Talk: {
+    icon: "🎙️",
+    gradient: "linear-gradient(135deg, #0a100f 0%, #0f1a18 100%)",
+    accent: "#2dd4bf",
+  },
+  "War & Politics": {
+    icon: "🏛️",
+    gradient: "linear-gradient(135deg, #0f0f0a 0%, #1a1a0a 100%)",
+    accent: "#a3a3a3",
+  },
 
+  // ── Fallback ─────────────────────────────────────────────────────
   default: {
     icon: "🎬",
-    gradient: "linear-gradient(135deg,#0f0f18,#1a1a2a)",
+    gradient: "linear-gradient(135deg, #0f0f18 0%, #1a1a2a 100%)",
     accent: "#e50914",
   },
 };
-
 const getVisual = (name) => GENRE_VISUAL[name] ?? GENRE_VISUAL.default;
 
 /* ── Skeleton ── */
@@ -261,7 +259,10 @@ const Genres = () => {
   /* ── Load genres on mount ── */
   useEffect(() => {
     getAllGenres()
-      .then(setGenres)
+      .then((data) => {
+        const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name));
+        setGenres(sorted);
+      })
       .catch(() => setError("Failed to load genres."))
       .finally(() => setLoadingGenres(false));
   }, []);
@@ -506,7 +507,11 @@ const Genres = () => {
                   fontWeight: 400,
                 }}
               >
-                {activeTab === "TV Shows" ? "TV Shows" : "Movies"}
+                {activeTab === "TV Shows"
+                  ? "TV Shows"
+                  : activeTab === "Movies"
+                    ? "Movies"
+                    : "All"}{" "}
               </span>
             </h2>
             <button

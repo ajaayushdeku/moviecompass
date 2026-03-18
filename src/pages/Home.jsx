@@ -196,7 +196,7 @@ const Home = () => {
   };
 
   /* ── Select a dropdown item → fill input and run search ── */
-  const handleDropdownSelect = useCallback((item) => {
+  const handleDropdownSelect = useCallback(async (item) => {
     const title = item.title ?? item.name ?? "";
     setSearchQuery(title);
     setShowDropDown(false);

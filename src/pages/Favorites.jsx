@@ -1,5 +1,6 @@
 import React from "react";
 import "../css/Favorites.css";
+import "../css/PagesShared.css";
 import { useMovieContext } from "../contexts/MovieContext";
 import MovieCard from "../components/MovieCard";
 import { Link } from "react-router-dom";
@@ -10,7 +11,7 @@ const Favorites = () => {
 
   if (count > 0) {
     return (
-      <div className="favorites-page">
+      <div className="page favorites-page">
         {/* Hero header */}
         <header className="favorites-hero">
           <p className="favorites-eyebrow">Your Collection</p>
@@ -67,7 +68,7 @@ const Favorites = () => {
 
   /* ── Empty state ── */
   return (
-    <div className="favorites-page">
+    <div className="page favorites-page">
       <div className="favorites-empty">
         <div className="empty-icon-wrap">
           <div className="empty-icon-inner">

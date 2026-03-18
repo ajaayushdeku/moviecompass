@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import logo from "../assets/images/logo.png";
 import "../css/NavBar.css";
 
@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/movies", label: "Movies" },
   { to: "/tvshows", label: "TV Shows" },
+  { to: "/actors", label: "Actors" },
   { to: "/trending", label: "Trending" },
   { to: "/genres", label: "Genres" },
   { to: "/favorites", label: "Favorites" },
@@ -14,13 +15,14 @@ const NAV_LINKS = [
 
 const NavBar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef(null);
   const hamburgerRef = useRef(null);
 
   /* close drawer on route change */
   useEffect(() => {
-    setDrawerOpen(false);
+    setTimeout(() => setDrawerOpen(false), 100); // slight delay to allow click to register
   }, [pathname]);
 
   /* close drawer on outside click */
@@ -50,6 +52,25 @@ const NavBar = () => {
     };
   }, [drawerOpen]);
 
+  const scrollToSearch = () => {
+    if (pathname === "/") {
+      // Already on Home — just scroll to the search anchor
+      document.getElementById("search")?.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => {
+        document.querySelector(".search-input")?.focus();
+      }, 400);
+    } else {
+      // Navigate to Home, then scroll after the page renders
+      navigate("/");
+      setTimeout(() => {
+        document
+          .getElementById("search")
+          ?.scrollIntoView({ behavior: "smooth" });
+        document.querySelector(".search-input")?.focus();
+      }, 300);
+    }
+  };
+
   return (
     <section>
       <nav className="navbar">
@@ -76,7 +97,12 @@ const NavBar = () => {
         {/* ── Right ── */}
         <div className="navbar-right">
           {/* Search icon – wired to Home's search bar via a quick hash scroll */}
-          <a href="#search" className="nav-icon-btn" title="Search">
+          <div
+            className="nav-icon-btn"
+            title="Search"
+            aria-label="Go to search"
+            onClick={scrollToSearch}
+          >
             <svg
               width="16"
               height="16"
@@ -90,7 +116,7 @@ const NavBar = () => {
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-          </a>
+          </div>
 
           {/* Avatar */}
           <div className="nav-avatar" title="Profile">
