@@ -9,6 +9,7 @@ import TvShows from "./pages/TvShows";
 import Trending from "./pages/Trending";
 import Genres from "./pages/Genres";
 import Actors from "./pages/Actors";
+import WatchList from "./pages/WatchList";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/trending" element={<Trending />} />
           <Route path="/genres" element={<Genres />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/watchlist" element={<WatchList />} />
         </Routes>
       </main>
     </MovieProvider>

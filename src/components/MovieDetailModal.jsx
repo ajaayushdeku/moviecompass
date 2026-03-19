@@ -12,8 +12,16 @@ import MediaIcon from "./MediaIcon";
    Layout: poster (left) + details (right) + trailer iframe (bottom)
 ───────────────────────────────────────────────────────────────── */
 const MovieDetailModal = ({ movie, onClose }) => {
-  const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
+  const {
+    isFavorite,
+    addToFavorites,
+    removeFromFavorites,
+    isWatchListed,
+    addWatchList,
+    removeFromWatchList,
+  } = useMovieContext();
   const favorite = isFavorite(movie.id);
+  const watchlisted = isWatchListed(movie.id);
 
   const videos = movie.videos ?? [];
   const isTv = movie.media_type === "tv" || (!movie.title && !!movie.name);
@@ -64,6 +72,15 @@ const MovieDetailModal = ({ movie, onClose }) => {
 
   const onFavoriteClick = () => {
     favorite ? removeFromFavorites(movie.id) : addToFavorites(movie);
+  };
+
+  const onWatchListClick = () => {
+    if (watchlisted) {
+      removeFromWatchList(movie.id);
+    } else {
+      const { status, ...cleanMovie } = movie;
+      addWatchList(cleanMovie);
+    }
   };
 
   const modal = (
@@ -258,7 +275,7 @@ const MovieDetailModal = ({ movie, onClose }) => {
 
             {/* Action buttons */}
             <div className="detail-actions">
-              <button
+              <div
                 type="button"
                 className={`detail-fav-btn ${favorite ? "detail-fav-btn--active" : ""}`}
                 onClick={onFavoriteClick}
@@ -280,7 +297,47 @@ const MovieDetailModal = ({ movie, onClose }) => {
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
                 {favorite ? "Saved" : "Add to Favorites"}
-              </button>
+              </div>
+
+              <div
+                type="button"
+                className={`detail-watchlist-btn ${watchlisted ? "detail-watchlist-btn--active" : ""}`}
+                onClick={onWatchListClick}
+                aria-label={
+                  watchlisted ? "Remove from watchlist" : "Add to watchlist"
+                }
+                aria-pressed={watchlisted}
+              >
+                {watchlisted ? (
+                  /* Bookmarked (filled) */
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    stroke="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  </svg>
+                ) : (
+                  /* Not bookmarked (outline) */
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  </svg>
+                )}
+                {watchlisted ? "In Watchlist" : "Add to Watchlist"}
+              </div>
             </div>
           </div>
         </div>

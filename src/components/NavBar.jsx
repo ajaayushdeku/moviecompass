@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { to: "/trending", label: "Trending" },
   { to: "/genres", label: "Genres" },
   { to: "/favorites", label: "Favorites" },
+  { to: "/watchlist", label: "Watch List" },
 ];
 
 const NavBar = () => {
@@ -78,7 +79,7 @@ const NavBar = () => {
         <div className="navbar-left">
           <Link to="/" className="navbar-logo">
             {/* <img src={logo} alt="MovieCompass" /> */}
-            WatchRadar
+            CinemaTracker
           </Link>
 
           <div className="navbar-links">
@@ -120,7 +121,7 @@ const NavBar = () => {
 
           {/* Avatar */}
           <div className="nav-avatar" title="Profile">
-            MC
+            CT
           </div>
 
           {/* hamburger */}

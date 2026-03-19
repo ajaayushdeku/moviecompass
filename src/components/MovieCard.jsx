@@ -7,10 +7,18 @@ import MovieDetailModal from "./MovieDetailModal";
 import MediaIcon from "./MediaIcon";
 
 const MovieCard = ({ movie }) => {
-  const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
+  const {
+    isFavorite,
+    addToFavorites,
+    removeFromFavorites,
+    isWatchListed,
+    addWatchList,
+    removeFromWatchList,
+  } = useMovieContext();
   const [showTrailer, setShowTrailer] = useState(false);
   const [showDetailInfo, setShowDetailInfo] = useState(false);
   const favorite = isFavorite(movie.id);
+  const watchlisted = isWatchListed(movie.id);
 
   const isTv = Boolean(
     movie.media_type === "tv" || (movie.name && !movie.title),
@@ -19,6 +27,21 @@ const MovieCard = ({ movie }) => {
   const onFavoriteClick = (e) => {
     e.stopPropagation();
     favorite ? removeFromFavorites(movie.id) : addToFavorites(movie);
+  };
+
+  const onWatchListClick = (e) => {
+    e.stopPropagation();
+    if (watchlisted) {
+      removeFromWatchList(movie.id);
+    } else {
+      // Strip videos and other large/derived fields before storing.
+      // videos can be a large array fetched at runtime — there's no
+      // reason to persist it in localStorage via context.
+      // status is stripped inside addWatchList in context, but we
+      // do it here too as a clear-intent defence-in-depth measure.
+      const { status, ...cleanMovie } = movie;
+      addWatchList(cleanMovie);
+    }
   };
 
   const posterSrc = movie.poster_path
@@ -95,6 +118,47 @@ const MovieCard = ({ movie }) => {
             >
               ❤
             </button>
+
+            {/* Watchlist — top-left */}
+            <div
+              type="button"
+              className={`watchlist-btn ${watchlisted ? "active" : ""}`}
+              onClick={onWatchListClick}
+              title={watchlisted ? "Remove from Watchlist" : "Add to Watchlist"}
+              aria-label={
+                watchlisted ? "Remove from Watchlist" : "Add to Watchlist"
+              }
+              aria-pressed={watchlisted}
+            >
+              {watchlisted ? (
+                /* Bookmarked (filled) */
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  stroke="none"
+                  aria-hidden="true"
+                >
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+              ) : (
+                /* Not bookmarked (outline) */
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+              )}
+            </div>
           </div>
 
           {/* Rating badge */}

@@ -178,6 +178,50 @@
   transform: scale(0.95);
 }
 
+/* ══ WATCHLIST BUTTON (poster overlay, top-left) ════════════════ */
+.watchlist-btn {
+  position: absolute;
+  top: 40px;
+  right: 5px;
+
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+  z-index: 5;
+}
+.watchlist-btn:hover {
+  background: rgba(59, 130, 246, 0.75); /* blue — distinct from red favourite */
+  border-color: transparent;
+  color: #fff;
+}
+.watchlist-btn.active {
+  background: rgba(59, 130, 246, 0.85);
+  border-color: transparent;
+  color: #fff;
+}
+.watchlist-btn.active:hover {
+  background: rgba(37, 99, 235, 0.9);
+}
+
 /* ══ RATING BADGE ════════════════════════ */
 .rating-badge {
   position: absolute;

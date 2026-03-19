@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import MovieTrailerModal from "./MovieTrailerModal";
 import { useMovieContext } from "../contexts/MovieContext";
 import { getTvShowVideos } from "../services/api";
@@ -7,31 +8,37 @@ const SpotlightBanner = ({ show }) => {
   const [showTrailer, setShowTrailer] = useState(false);
   const [videos, setVideos] = useState([]);
   const [loadingVideos, setLoadingVideos] = useState(false);
-  const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
-  const favorite = show ? isFavorite(show.id) : false;
 
-  /* ── Fetch videos whenever the featured show changes ── */
+  const {
+    isFavorite,
+    addToFavorites,
+    removeFromFavorites,
+    isWatchListed,
+    addWatchList,
+    removeFromWatchList,
+  } = useMovieContext();
+
+  const favorite = show ? isFavorite(show.id) : false;
+  const watchlisted = show ? isWatchListed(show.id) : false;
+
+  // ── Fetch videos whenever the featured show changes ─────────────
   useEffect(() => {
     if (!show?.id) return;
 
     let cancelled = false;
-    const fetchVideos = async () => {
-      setVideos([]);
-      setLoadingVideos(true);
+    setVideos([]);
+    setLoadingVideos(true);
 
-      getTvShowVideos(show.id)
-        .then((results) => {
-          if (!cancelled) setVideos(results);
-        })
-        .catch((err) => {
-          console.error("SpotlightBanner video fetch failed:", err);
-        })
-        .finally(() => {
-          if (!cancelled) setLoadingVideos(false);
-        });
-    };
-
-    fetchVideos();
+    getTvShowVideos(show.id)
+      .then((results) => {
+        if (!cancelled) setVideos(results);
+      })
+      .catch((err) => {
+        console.error("SpotlightBanner video fetch failed:", err);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingVideos(false);
+      });
 
     return () => {
       cancelled = true;
@@ -40,17 +47,34 @@ const SpotlightBanner = ({ show }) => {
 
   if (!show) return null;
 
-  const onFavoriteClick = (e) => {
-    e.stopPropagation();
+  // ── Favourite toggle ─────────────────────────────────────────────
+  const onFavoriteClick = () => {
     if (favorite) {
       removeFromFavorites(show.id);
     } else {
-      // Normalize so MovieCard/context shape is consistent
+      // Normalize TV fields + strip videos before storing in favorites
+      const { videos: _v, status: _s, ...cleanShow } = show;
       addToFavorites({
-        ...show,
+        ...cleanShow,
         title: show.name ?? show.original_name,
         release_date: show.first_air_date,
-        videos,
+      });
+    }
+  };
+
+  // ── Watchlist toggle ─────────────────────────────────────────────
+  const onWatchListClick = () => {
+    if (watchlisted) {
+      removeFromWatchList(show.id);
+    } else {
+      // Strip videos, status, and normalize TV fields before storing.
+      // addWatchList in context also strips status, but doing it here
+      // keeps the stored object clean and predictable.
+      const { videos: _v, status: _s, ...cleanShow } = show;
+      addWatchList({
+        ...cleanShow,
+        title: show.name ?? show.original_name,
+        release_date: show.first_air_date,
       });
     }
   };
@@ -58,12 +82,11 @@ const SpotlightBanner = ({ show }) => {
   const hasTrailer = videos.some(
     (v) => v.type === "Trailer" && v.site === "YouTube",
   );
-
-  // Pass the fetched videos down to the modal
   const showWithVideos = { ...show, videos };
 
   return (
     <div className="spotlight-banner">
+      {/* Backdrop */}
       <div
         className="spotlight-bg"
         style={{
@@ -76,9 +99,12 @@ const SpotlightBanner = ({ show }) => {
         }}
       />
       <div className="spotlight-noise" />
+
       <div className="spotlight-content">
         <p className="spotlight-eyebrow">📡 Featured Series</p>
         <h2 className="spotlight-title">{show.name}</h2>
+
+        {/* Meta row */}
         <div className="spotlight-meta">
           <span className="spotlight-meta-item">
             <svg
@@ -101,6 +127,8 @@ const SpotlightBanner = ({ show }) => {
             </span>
           )}
         </div>
+
+        {/* Overview */}
         <p
           style={{
             fontSize: "0.83rem",
@@ -113,9 +141,11 @@ const SpotlightBanner = ({ show }) => {
           {show.overview?.slice(0, 120)}…
         </p>
 
+        {/* Action buttons */}
         <div className="spotlight-actions">
-          {/* ── Watch Trailer ── */}
+          {/* Watch Trailer */}
           <button
+            type="button"
             className="btn-primary"
             onClick={() => setShowTrailer(true)}
             disabled={loadingVideos || !hasTrailer}
@@ -129,7 +159,6 @@ const SpotlightBanner = ({ show }) => {
             style={{ opacity: !loadingVideos && !hasTrailer ? 0.5 : 1 }}
           >
             {loadingVideos ? (
-              /* mini spinner */
               <span
                 style={{
                   display: "inline-block",
@@ -159,11 +188,13 @@ const SpotlightBanner = ({ show }) => {
                 : "No Trailer"}
           </button>
 
-          {/* ── Add to Favorite ── */}
-          <button
+          {/* Add to Favourite */}
+          <div
+            type="button"
             className={`btn-ghost ${favorite ? "btn-ghost--active" : ""}`}
             onClick={onFavoriteClick}
             title={favorite ? "Remove from Favorites" : "Add to Favorites"}
+            aria-pressed={favorite}
             style={
               favorite ? { borderColor: "var(--red)", color: "var(--red)" } : {}
             }
@@ -181,17 +212,58 @@ const SpotlightBanner = ({ show }) => {
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
             {favorite ? "Saved" : "Add to Favorites"}
-          </button>
+          </div>
+
+          {/* Add to Watchlist — use <button> not <div> */}
+          <div
+            type="button"
+            className={`detail-watchlist-btn ${watchlisted ? "detail-watchlist-btn--active" : ""}`}
+            onClick={onWatchListClick}
+            aria-label={
+              watchlisted ? "Remove from watchlist" : "Add to watchlist"
+            }
+            aria-pressed={watchlisted}
+          >
+            {watchlisted ? (
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="none"
+                aria-hidden="true"
+              >
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+            ) : (
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              </svg>
+            )}
+            {watchlisted ? "In Watchlist" : "Add to Watchlist"}
+          </div>
         </div>
       </div>
 
-      {/* ── Trailer Modal ── */}
-      {showTrailer && (
-        <MovieTrailerModal
-          movie={showWithVideos}
-          onClose={() => setShowTrailer(false)}
-        />
-      )}
+      {/* Trailer Modal — portal so it's never clipped by spotlight overflow */}
+      {showTrailer &&
+        createPortal(
+          <MovieTrailerModal
+            movie={showWithVideos}
+            onClose={() => setShowTrailer(false)}
+          />,
+          document.body,
+        )}
     </div>
   );
 };

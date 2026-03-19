@@ -257,7 +257,8 @@
   margin-top: 4px;
 }
 
-.detail-fav-btn {
+.detail-fav-btn,
+.detail-watchlist-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -279,15 +280,41 @@
 .detail-fav-btn:hover {
   background: rgba(229, 9, 20, 0.12);
   border-color: rgba(229, 9, 20, 0.4);
+  color: #ff6b6b;
   transform: translateY(-1px);
 }
+.detail-watchlist-btn:hover {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+  transform: translateY(-1px);
+}
+
 .detail-fav-btn--active {
   background: rgba(229, 9, 20, 0.18);
   border-color: rgba(229, 9, 20, 0.55);
   color: #ff6b6b;
 }
+.detail-watchlist-btn--active {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.55);
+  color: #60a5fa;
+}
+
 .detail-fav-btn--active:hover {
   background: rgba(229, 9, 20, 0.25);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+.detail-watchlist-btn--active:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.detail-fav-btn:active,
+.detail-watchlist-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 /* ══ TRAILER SECTION ═════════════════════════════════════════════ */
