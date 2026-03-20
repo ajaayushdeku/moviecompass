@@ -139,7 +139,7 @@
 .filter-chip:hover {
   background: rgba(229, 9, 20, 0.12);
   border-color: rgba(229, 9, 20, 0.4);
-  color: var(--text);
+  color: #ffa2a2;
 }
 .filter-chip.active {
   background: var(--red);

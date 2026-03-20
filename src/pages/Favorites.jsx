@@ -13,7 +13,7 @@ const Favorites = () => {
     return (
       <div className="page favorites-page">
         {/* Hero header */}
-        <header className="favorites-hero">
+        <header className="page-hero favorites-hero">
           <p className="favorites-eyebrow">Your Collection</p>
           <h1 className="favorites-heading">
             My <span>Favorites</span>

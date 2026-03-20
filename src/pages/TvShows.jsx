@@ -168,18 +168,109 @@ const TvShows = () => {
       <div className="stat-pills">
         {[
           {
-            icon: "📺",
-            value: totalResults > 0 ? totalResults.toLocaleString() : "8500+",
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* TV screen — TV Shows */}
+                <rect x="2" y="7" width="20" height="15" rx="2" />
+                <polyline points="17 2 12 7 7 2" />
+              </svg>
+            ),
+            value: totalResults > 0 ? totalResults.toLocaleString() : "8,500+",
             label: "TV Shows",
+            color: "#3b82f6",
           },
-          { icon: "🎭", value: genres.length, label: "Genres" },
-          { icon: "📡", value: "On Air", label: "Airing Today" },
-          { icon: "🏆", value: "Top", label: "Award Winners" },
+          {
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Theatre masks — Genres */}
+                <path d="M2 10s3-3 3-8" />
+                <path d="M22 10s-3-3-3-8" />
+                <path d="M10 2c0 4.4-3.6 8-8 8" />
+                <path d="M14 2c0 4.4 3.6 8 8 8" />
+                <path d="M2 10s2 2 2 5" />
+                <path d="M22 10s-2 2-2 5" />
+                <path d="M8 15s0 3 4 3 4-3 4-3" />
+              </svg>
+            ),
+            value: genres.length,
+            label: "Genres",
+            color: "#a855f7",
+          },
+          {
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Signal / broadcast — Airing Today */}
+                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                <circle cx="12" cy="20" r="1" fill="currentColor" />
+              </svg>
+            ),
+            value: "On Air",
+            label: "Airing Today",
+            color: "#22c55e",
+          },
+          {
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Trophy — Award Winners */}
+                <polyline points="8 21 12 17 16 21" />
+                <path d="M6 3H18" />
+                <path d="M6 3v4a6 6 0 0 0 12 0V3" />
+                <path d="M6 7c-1.11 0-2 .89-2 2v1a4 4 0 0 0 8 0V9a2 2 0 0 0-2-2" />
+                <path d="M18 7c1.11 0 2 .89 2 2v1a4 4 0 0 1-8 0V9a2 2 0 0 1 2-2" />
+                <line x1="12" y1="17" x2="12" y2="12" />
+              </svg>
+            ),
+            value: "Top",
+            label: "Award Winners",
+            color: "#f59e0b",
+          },
         ].map((s) => (
           <div className="stat-pill" key={s.label}>
-            <span className="stat-pill-icon">{s.icon}</span>
+            <span className="stat-pill-icon" style={{ color: s.color }}>
+              {s.icon}
+            </span>
             <div className="stat-pill-body">
-              <div className="stat-pill-value">{s.value}</div>
+              <div className="stat-pill-value" style={{ color: s.color }}>
+                {s.value}
+              </div>
               <div className="stat-pill-label">{s.label}</div>
             </div>
           </div>
@@ -298,7 +389,21 @@ const TvShows = () => {
                 {loadingMore ? (
                   <span className="load-more-spinner" />
                 ) : (
-                  <>Load More</>
+                  <>
+                    Load More{" "}
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </>
                 )}
               </button>
             </div>

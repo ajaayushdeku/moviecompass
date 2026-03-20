@@ -4,13 +4,6 @@ import { useMovieContext } from "../contexts/MovieContext";
 import "../css/MovieDetailModal.css";
 import MediaIcon from "./MediaIcon";
 
-/* ─────────────────────────────────────────────────────────────────
-   MovieDetailModal
-   Triggered by the "More Info" button on MovieCard.
-   Receives the same `movie` object MovieCard already has —
-   no extra API call needed for the basic info panel.
-   Layout: poster (left) + details (right) + trailer iframe (bottom)
-───────────────────────────────────────────────────────────────── */
 const MovieDetailModal = ({ movie, onClose }) => {
   const {
     isFavorite,

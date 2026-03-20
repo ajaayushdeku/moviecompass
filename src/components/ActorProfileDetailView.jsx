@@ -4,6 +4,8 @@ import MediaIcon from "./MediaIcon";
 import MovieTrailerModal from "./MovieTrailerModal";
 import { getMovieVideos, getTvShowVideos } from "../services/api";
 import { PosterPlaceholder } from "./PosterPlaceholder";
+import "../css/Actors.css";
+import "../css/PagesShared.css";
 
 const FILTER_CHIPS = ["All", "Movies", "TV Shows"];
 
@@ -168,6 +170,8 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
   const [creditLoad, setCreditLoad] = useState(10); // how many credits to show before "Load More"
 
   const [loadingMore, setLoadingMore] = useState(false);
+  const currentPage = Math.ceil(creditLoad / 10);
+  const totalPages = Math.ceil(credits.length / 10);
 
   const actorAge = calcAge(actor.birthday);
   const shortBio = actor.biography?.slice(0, 320);
@@ -181,13 +185,11 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
 
   /* ── Load more Credit ── */
   const handleLoadMore = () => {
-    if (loadingMore) return;
-    setCreditLoad((prev) => prev + 10);
     setLoadingMore(true);
-    // Simulate loading delay
     setTimeout(() => {
+      setCreditLoad((prev) => prev + 10);
       setLoadingMore(false);
-    }, 800);
+    }, 1500); // Simulate loading delay
   };
 
   return (
@@ -373,9 +375,42 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
       {/* ── Stats strip ── */}
       <div className="actor-stats-strip">
         {[
-          { icon: "🎬", value: credits.length, label: "Credits" },
           {
-            icon: "⭐",
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Clapperboard — Credits */}
+                <rect x="2" y="2" width="20" height="20" rx="2.18" />
+                <line x1="7" y1="2" x2="7" y2="22" />
+                <line x1="17" y1="2" x2="17" y2="22" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+              </svg>
+            ),
+            value: credits.length,
+            label: "Credits",
+            color: "#ff3943",
+          },
+          {
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="#f5c518"
+                stroke="none"
+              >
+                {/* Star — Avg Rating */}
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+              </svg>
+            ),
             value:
               credits.length > 0
                 ? (
@@ -384,27 +419,69 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
                   ).toFixed(1)
                 : "—",
             label: "Avg Rating",
+            color: "#f5c518",
           },
           {
-            icon: "📅",
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Calendar — Latest Work */}
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            ),
             value: credits[0]?.release_date?.split("-")[0] ?? "—",
             label: "Latest Work",
+            color: "#3b82f6",
           },
           {
-            icon: "🏆",
+            icon: (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Trophy — Acclaimed */}
+                <polyline points="8 21 12 17 16 21" />
+                <path d="M6 3H18" />
+                <path d="M6 3v4a6 6 0 0 0 12 0V3" />
+                <path d="M6 7c-1.11 0-2 .89-2 2v1a4 4 0 0 0 8 0V9a2 2 0 0 0-2-2" />
+                <path d="M18 7c1.11 0 2 .89 2 2v1a4 4 0 0 1-8 0V9a2 2 0 0 1 2-2" />
+                <line x1="12" y1="17" x2="12" y2="12" />
+              </svg>
+            ),
             value: credits.filter((c) => c.vote_average >= 8).length,
             label: "Acclaimed",
+            color: "#f59e0b",
           },
         ].map((stat, idx) => (
           <div
             className="actor-stats-pill"
-            // key={stat.label}
-            key={idx}
+            key={stat.label}
             style={{ animationDelay: `${idx * 70}ms` }}
           >
-            <span className="actor-stats-icon">{stat.icon}</span>
+            <span className="actor-stats-icon" style={{ color: stat.color }}>
+              {stat.icon}
+            </span>
             <div className="actor-stats-body">
-              <span className="actor-stats-value">{stat.value}</span>
+              <span className="actor-stats-value" style={{ color: stat.color }}>
+                {stat.value}
+              </span>
               <span className="actor-stats-label">{stat.label}</span>
             </div>
           </div>
@@ -454,7 +531,7 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
               <button
                 key={idx}
                 type="button"
-                className={`actor-filter-chip ${activeMediaType === chip ? "actor-filter-chip--active" : ""}`}
+                className={`filter-chip ${activeMediaType === chip ? "active" : ""}`}
                 onClick={() => setActiveMediaType(chip)}
               >
                 {chip}
@@ -485,7 +562,7 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
         )}
 
         {/* Load more */}
-        {!loadingMore && (
+        {currentPage < totalPages && (
           <div className="actor-load-more-wrap">
             <button
               className="actor-load-more-btn"

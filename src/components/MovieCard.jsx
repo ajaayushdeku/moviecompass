@@ -34,13 +34,13 @@ const MovieCard = ({ movie }) => {
     if (watchlisted) {
       removeFromWatchList(movie.id);
     } else {
-      // Strip videos and other large/derived fields before storing.
-      // videos can be a large array fetched at runtime — there's no
-      // reason to persist it in localStorage via context.
-      // status is stripped inside addWatchList in context, but we
-      // do it here too as a clear-intent defence-in-depth measure.
       const { status, ...cleanMovie } = movie;
       addWatchList(cleanMovie);
+      console.log(
+        "Check Status of Content's watchlist entry:",
+        status,
+        cleanMovie,
+      );
     }
   };
 
