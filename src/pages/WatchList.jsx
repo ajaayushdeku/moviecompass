@@ -407,69 +407,44 @@ const WatchList = () => {
       <div className="wl-toolbar">
         {/* ── Search bar ── */}
         <div className="wl-search-wrap">
-          <form
-            autoComplete="off"
-            className="wl-search-form"
-            onSubmit={(e) => e.preventDefault()}
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            {/* search icon */}
-            <span className="search-icon">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
 
-            <input
-              type="text"
-              placeholder="Search your watchlist…"
-              className="wl-search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoComplete="off"
-              aria-label="Search watchlist"
-            />
+          <input
+            type="text"
+            placeholder="Search your watchlist…"
+            className="wl-search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoComplete="off"
+            aria-label="Search watchlist"
+          />
 
-            {/* clear × button — only when there's text */}
-            {searchQuery && (
-              <button
-                type="button"
-                className="wl-search-clear"
-                onClick={() => {
-                  setSearchQuery("");
-                }}
-                aria-label="Clear search"
-                tabIndex={-1}
-              >
-                ✖
-              </button>
-            )}
-
-            <button type="submit" className="wl-search-button">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+          {/* clear × button — only when there's text */}
+          {searchQuery && (
+            <button
+              type="button"
+              className="wl-search-clear"
+              onClick={() => {
+                setSearchQuery("");
+              }}
+              aria-label="Clear search"
+              tabIndex={-1}
+            >
+              ✖
             </button>
-          </form>
+          )}
         </div>
 
         {/* Sort + view toggle */}

@@ -191,13 +191,10 @@ const SpotlightBanner = ({ show }) => {
           {/* Add to Favourite */}
           <div
             type="button"
-            className={`btn-ghost ${favorite ? "btn-ghost--active" : ""}`}
+            className={`detail-fav-btn ${favorite ? "detail-fav-btn--active" : ""}`}
             onClick={onFavoriteClick}
             title={favorite ? "Remove from Favorites" : "Add to Favorites"}
             aria-pressed={favorite}
-            style={
-              favorite ? { borderColor: "var(--red)", color: "var(--red)" } : {}
-            }
           >
             <svg
               width="13"

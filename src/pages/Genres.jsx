@@ -560,7 +560,7 @@ const Genres = () => {
             </div>
           ) : (
             <>
-              <div className="page-grid">
+              <div className="page-grid" style={{ padding: 0 }}>
                 {results.map((item, i) => (
                   <div
                     key={`${item.id}-${i}`}
