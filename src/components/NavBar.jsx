@@ -79,7 +79,7 @@ const NavBar = () => {
         <div className="navbar-left">
           <Link to="/" className="navbar-logo">
             {/* <img src={logo} alt="MovieCompass" /> */}
-            CinemaTracker
+            <span>Cinema</span>Tracker
           </Link>
 
           <div className="navbar-links">

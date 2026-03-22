@@ -209,7 +209,7 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
           <line x1="19" y1="12" x2="5" y2="12" />
           <polyline points="12 19 5 12 12 5" />
         </svg>
-        Back to results
+        Back to Actors Page
       </button>
 
       {/* ── Hero ── */}
@@ -447,8 +447,8 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
           {
             icon: (
               <svg
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -456,13 +456,13 @@ const ActorProfileDetailView = ({ actor, credits, images, onBack }) => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                {/* Trophy — Acclaimed */}
                 <polyline points="8 21 12 17 16 21" />
                 <path d="M6 3H18" />
                 <path d="M6 3v4a6 6 0 0 0 12 0V3" />
                 <path d="M6 7c-1.11 0-2 .89-2 2v1a4 4 0 0 0 8 0V9a2 2 0 0 0-2-2" />
                 <path d="M18 7c1.11 0 2 .89 2 2v1a4 4 0 0 1-8 0V9a2 2 0 0 1 2-2" />
                 <line x1="12" y1="17" x2="12" y2="12" />
+                <line x1="8" y1="21.5" x2="16" y2="21.5" />
               </svg>
             ),
             value: credits.filter((c) => c.vote_average >= 8).length,

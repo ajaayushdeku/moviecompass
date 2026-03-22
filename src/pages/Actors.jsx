@@ -3,12 +3,13 @@ import "../css/Actors.css";
 import "../css/PagesShared.css";
 import {
   searchPeople,
-  getPersonDetails,
+  // getPersonDetails,
   getPopularPeople,
 } from "../services/api";
 import { ActorSearchBar } from "../components/ActorSearchBar";
 import ActorProfileDetailView from "../components/ActorProfileDetailView";
 import { ProfilePlaceholder } from "../components/ProfilePlaceholder";
+import { useNavigate } from "react-router-dom";
 
 // ══════════════════════════════════════════════════════════════════
 //  ACTOR GRID CARD  (used in both "default" and "grid" views)
@@ -92,6 +93,8 @@ const ActorGridCard = ({ person, onClick, delay = 0 }) => {
 
 // ─────────────────────────────────────────────────────────────────
 const Actors = () => {
+  const navigate = useNavigate();
+
   // ── Search state ──
   const [searchQuery, setSearchQuery] = useState("");
   const [dropDownResults, setDropDownResults] = useState([]);
@@ -111,15 +114,20 @@ const Actors = () => {
   const [loadingMore, setLoadingMore] = useState(false);
 
   // ── Profile state ──
-  const [actor, setActor] = useState(null);
-  const [credits, setCredits] = useState([]);
-  const [images, setImages] = useState([]);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [profileError, setProfileError] = useState(null);
+  // const [actor, setActor] = useState(null);
+  // const [credits, setCredits] = useState([]);
+  // const [images, setImages] = useState([]);
+  // const [profileLoading, setProfileLoading] = useState(false);
+  // const [profileError, setProfileError] = useState(null);
 
   const formRef = useRef(null);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
 
   useEffect(() => {
     const loadPopular = async () => {
@@ -149,11 +157,11 @@ const Actors = () => {
         setActiveDropdownIndex(-1);
       }
     };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ── Fetch results as user types ── */
+  /* ── Fetch & Debounced dropdown as user types ── */
   useEffect(() => {
     if (searchQuery.trim().length < 2) {
       setDropDownResults([]);
@@ -199,41 +207,54 @@ const Actors = () => {
   };
 
   /* ── Select a dropdown item → fill input and run search ── */
-  const handleDropdownSelect = useCallback(async (person) => {
-    const actorName = person.name ?? "";
-    setSearchQuery(actorName);
-    setShowDropDown(false);
-    setActiveDropdownIndex(-1);
-    inputRef.current?.focus();
+  const handleDropdownSelect = useCallback(
+    async (person) => {
+      const actorName = person.name ?? "";
+      setSearchQuery(actorName);
+      setShowDropDown(false);
+      setActiveDropdownIndex(-1);
+      inputRef.current?.focus();
 
-    await loadProfile(person.id);
-  }, []);
+      // await loadProfile(person.id);
 
-  /* ── Load full actor profile ── */
-  const loadProfile = async (personId) => {
-    setProfileLoading(true);
-    setProfileError(null);
+      navigate(`/actors/${person.id}`);
+    },
+    [navigate],
+  );
 
-    try {
-      const data = await getPersonDetails(personId);
-      setActor(data);
-      // Sort credits by release date descending
-      const sorted = [...data.credits].sort((a, b) =>
-        (b.release_date ?? b.first_air_date ?? "").localeCompare(
-          a.release_date ?? a.first_air_date ?? "",
-        ),
-      );
+  /* ── Grid card clicked → navigate to profile page ── */
+  const handleCardClick = useCallback(
+    (person) => {
+      navigate(`/actors/${person.id}`);
+    },
+    [navigate],
+  );
 
-      setCredits(sorted);
-      setImages(data.images.slice(0, 10));
-      setView("profile");
-    } catch (err) {
-      console.log(err);
-      setProfileError("Failed to load actor profile.");
-    } finally {
-      setProfileLoading(false);
-    }
-  };
+  // /* ── Load full actor profile ── */
+  // const loadProfile = async (personId) => {
+  //   setProfileLoading(true);
+  //   setProfileError(null);
+
+  //   try {
+  //     const data = await getPersonDetails(personId);
+  //     setActor(data);
+  //     // Sort credits by release date descending
+  //     const sorted = [...data.credits].sort((a, b) =>
+  //       (b.release_date ?? b.first_air_date ?? "").localeCompare(
+  //         a.release_date ?? a.first_air_date ?? "",
+  //       ),
+  //     );
+
+  //     setCredits(sorted);
+  //     setImages(data.images.slice(0, 10));
+  //     setView("profile");
+  //   } catch (err) {
+  //     console.log(err);
+  //     setProfileError("Failed to load actor profile.");
+  //   } finally {
+  //     setProfileLoading(false);
+  //   }
+  // };
 
   /* ── Form submit → show search results grid ── */
   const handleSearch = async (e) => {
@@ -306,19 +327,19 @@ const Actors = () => {
   };
 
   // ── Back from profile → previous grid view ──
-  const handleBack = () => {
-    setView(searchQuery.trim() ? "grid" : "default");
-    setActor(null);
-  };
+  // const handleBack = () => {
+  //   setView(searchQuery.trim() ? "grid" : "default");
+  //   setActor(null);
+  // };
 
-  console.log(
-    "View:",
-    view,
-    "Grid items:",
-    gridItems.length,
-    "Actor:",
-    actor?.name,
-  );
+  // console.log(
+  //   "View:",
+  //   view,
+  //   "Grid items:",
+  //   gridItems.length,
+  //   "Actor:",
+  //   actor?.name,
+  // );
 
   return (
     <div className="page actor-page">
@@ -363,7 +384,7 @@ const Actors = () => {
       </div>
 
       {/* ══ PROFILE VIEW ═══════════════════════════════════════════ */}
-      {view === "profile" && profileLoading && (
+      {/* {view === "profile" && profileLoading && (
         <div className="actor-loading-state">
           <span className="actor-loading-spinner" />
           <p>Loading profile…</p>
@@ -380,14 +401,16 @@ const Actors = () => {
           images={images}
           onBack={handleBack}
         />
-      )}
+      )} */}
 
       {/* ══ GRID VIEW (default popular / search results) ══════════ */}
-      {(view === "default" || view === "grid") && (
-        <section className="actor-grid-section">
-          {/* Section header */}
-          <div className="actor-grid-header">
-            <h2 className="actor-section-title">{gridTitle}</h2>
+      {/* {(view === "default" || view === "grid") && ( */}
+      <section className="actor-grid-section">
+        {/* Section header */}
+        <div className="actor-grid-header">
+          <h2 className="actor-section-title">{gridTitle}</h2>
+          <div className="actor-section-count">
+            {gridItems.length} title{gridItems.length !== 1 ? "s" : ""}
             {view === "grid" && (
               <button
                 type="button"
@@ -398,91 +421,93 @@ const Actors = () => {
               </button>
             )}
           </div>
+        </div>
 
-          {/* Error */}
-          {gridError && <div className="actor-error-banner">{gridError}</div>}
+        {/* Error */}
+        {gridError && <div className="actor-error-banner">{gridError}</div>}
 
-          {/* Skeleton */}
-          {gridLoading ? (
-            <div className="actor-people-grid">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="actor-grid-card actor-grid-card--skeleton"
-                  style={{ animationDelay: `${i * 35}ms` }}
-                >
-                  <div className="actor-grid-photo actor-grid-photo--skeleton" />
-                  <div className="actor-grid-info">
-                    <div className="actor-skeleton-line actor-skeleton-line--med" />
-                    <div className="actor-skeleton-line actor-skeleton-line--short" />
-                  </div>
+        {/* Skeleton */}
+        {gridLoading ? (
+          <div className="actor-people-grid">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                className="actor-grid-card actor-grid-card--skeleton"
+                style={{ animationDelay: `${i * 35}ms` }}
+              >
+                <div className="actor-grid-photo actor-grid-photo--skeleton" />
+                <div className="actor-grid-info">
+                  <div className="actor-skeleton-line actor-skeleton-line--med" />
+                  <div className="actor-skeleton-line actor-skeleton-line--short" />
                 </div>
-              ))}
-            </div>
-          ) : gridItems.length === 0 ? (
-            <div className="actor-empty-state">
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ opacity: 0.25 }}
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              <h3>No results found</h3>
-              <p>Try a different name or spelling.</p>
-            </div>
-          ) : (
-            <div className="actor-people-grid">
-              {gridItems.map((person, i) => (
-                <ActorGridCard
-                  key={person.id}
-                  person={person}
-                  onClick={(p) => loadProfile(p.id)}
-                  delay={Math.min(i * 40, 500)}
-                />
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        ) : gridItems.length === 0 ? (
+          <div className="actor-empty-state">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ opacity: 0.25 }}
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <h3>No results found</h3>
+            <p>Try a different name or spelling.</p>
+          </div>
+        ) : (
+          <div className="actor-people-grid">
+            {gridItems.map((person, i) => (
+              <ActorGridCard
+                key={person.id}
+                person={person}
+                // onClick={(p) => loadProfile(p.id)}
+                onClick={handleCardClick}
+                delay={Math.min(i * 40, 500)}
+              />
+            ))}
+          </div>
+        )}
 
-          {/* Load more */}
-          {!gridLoading && currentPage < totalPages && (
-            <div className="actor-load-more-wrap">
-              <button
-                className="actor-load-more-btn"
-                onClick={handleLoadMore}
-                disabled={loadingMore}
-              >
-                {loadingMore ? (
-                  <span className="actor-loading-spinner actor-loading-spinner--sm" />
-                ) : (
-                  <>
-                    Load More{" "}
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </section>
-      )}
+        {/* Load more */}
+        {!gridLoading && currentPage < totalPages && (
+          <div className="actor-load-more-wrap">
+            <button
+              className="actor-load-more-btn"
+              onClick={handleLoadMore}
+              disabled={loadingMore}
+            >
+              {loadingMore ? (
+                <span className="actor-loading-spinner actor-loading-spinner--sm" />
+              ) : (
+                <>
+                  Load More{" "}
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </section>
+      {/* )} */}
     </div>
   );
 };

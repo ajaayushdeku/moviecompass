@@ -415,13 +415,13 @@
   margin-bottom: 20px;
 }
 .actor-back-link {
+  margin-left: 12px;
   background: none;
   border: none;
-  color: var(--red, #e50914);
-  font-family: var(--font-body, "DM Sans", sans-serif);
-  font-size: 0.78rem;
-  font-weight: 600;
+  color: var(--red);
   cursor: pointer;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
   padding: 0;
   transition: opacity 0.2s;
 }
@@ -465,6 +465,10 @@
 /* ─────────────────────────────────────────────────────────────────
    7. PROFILE VIEW
 ───────────────────────────────────────────────────────────────── */
+
+.actor-profile-view {
+  margin-top: 2rem;
+}
 
 /* Back button */
 .actor-back-btn {

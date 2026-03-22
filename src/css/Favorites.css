@@ -310,38 +310,45 @@
   }
 }
 
-/* ══ STATS ROW ═══════════════════════════ */
-.favorites-stats {
+/* ══ STATS STRIP ═════════════════════════ */
+.fav-stats-strip {
   display: flex;
   gap: 12px;
   padding: 0 5vw 28px;
   flex-wrap: wrap;
   opacity: 0;
-  animation: fadeUp 0.4s 0.35s forwards;
+  animation: fadeUp 0.4s 0.32s forwards;
 }
-
 .fav-stat-pill {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 9rem;
   padding: 10px 18px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
   border-radius: 10px;
 }
 .fav-stat-icon {
   font-size: 1.1rem;
 }
+.fav-stat-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
 .fav-stat-value {
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text, #e8e8f0);
   line-height: 1.1;
 }
 .fav-stat-label {
   font-size: 0.65rem;
-  color: var(--muted);
+  color: var(--muted, #7a7a9a);
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 /* ══ TOOLBAR ═════════════════════════════ */
@@ -371,6 +378,9 @@
 }
 .fav-search-wrap:focus-within {
   border-color: var(--red);
+  box-shadow:
+    0 0 0 4px var(--red-glow),
+    0 10px 40px rgba(0, 0, 0, 0.45);
   color: var(--text);
 }
 
@@ -400,71 +410,6 @@
   color: var(--red);
 }
 
-/* ══ RESPONSIVE ══════════════════════════ */
-@media (max-width: 480px) {
-  .favorites-stats {
-    padding: 0 4vw 22px;
-  }
-  .favorites-toolbar {
-    padding: 0 4vw 18px;
-  }
-  .fav-search-wrap {
-    max-width: 100%;
-  }
-}
-
-/* ══ STATS STRIP ═════════════════════════ */
-.fav-stats-strip {
-  display: flex;
-  gap: 12px;
-  padding: 0 5vw 28px;
-  flex-wrap: wrap;
-  opacity: 0;
-  animation: fadeUp 0.4s 0.32s forwards;
-}
-.fav-stat-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
-  border-radius: 10px;
-}
-.fav-stat-icon {
-  font-size: 1rem;
-  display: flex;
-}
-.fav-stat-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-.fav-stat-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text, #e8e8f0);
-  line-height: 1.1;
-}
-.fav-stat-label {
-  font-size: 0.63rem;
-  color: var(--muted, #7a7a9a);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* ══ TOOLBAR ═════════════════════════════ */
-.favorites-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 5vw 16px;
-  flex-wrap: wrap;
-  opacity: 0;
-  animation: fadeUp 0.4s 0.38s forwards;
-}
 .fav-toolbar-right {
   display: flex;
   align-items: center;
@@ -664,15 +609,57 @@
 
 /* Heart icon on the right */
 .fav-list-heart {
-  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+
   border-radius: 50%;
-  background: rgba(229, 9, 20, 0.1);
-  border: 1px solid rgba(229, 9, 20, 0.22);
+  border: none;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  z-index: 5;
+}
+
+/* Hover state */
+.fav-list-heart:hover {
+  background: rgba(229, 9, 20, 0.88);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+}
+
+/* Active (favorited) state */
+.fav-list-heart.active {
+  background: rgba(229, 9, 20, 0.9);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(229, 9, 20, 0.45);
+}
+
+/* Active hover */
+.fav-list-heart.active:hover {
+  background: rgb(200, 8, 18);
+  transform: scale(1.1);
+}
+
+/* Click animation */
+.fav-list-heart:active {
+  transform: scale(0.95);
 }
 
 /* ══ RESPONSIVE ══════════════════════════ */
@@ -685,16 +672,19 @@
   }
 }
 @media (max-width: 480px) {
-  .fav-stats-strip {
-    padding: 0 4vw 18px;
-    gap: 8px;
+  .fav-stats-strip,
+  .fav-toolbar,
+  .fav-filter-row,
+  .fav-result-count {
+    padding-left: 4vw;
+    padding-right: 4vw;
   }
   .fav-stat-pill {
     min-width: 90px;
     padding: 8px 12px;
   }
   .favorites-toolbar {
-    padding: 0 4vw 14px;
+    padding: 0 4vw 18px;
   }
   .fav-filter-row {
     padding: 0 4vw 16px;

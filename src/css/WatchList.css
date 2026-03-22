@@ -129,6 +129,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 9rem;
   padding: 10px 18px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
@@ -775,9 +776,8 @@
     display: none;
   }
 
-  .wl-toolbar {
-    gap: 1rem;
-    padding: 0.5rem 5vw 1.5rem;
+  .wl-stats-strip {
+    padding: 0 5vw 22px;
   }
 
   .wl-filter-divider {
@@ -806,6 +806,11 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
+  .wl-stat-pill {
+    min-width: 90px;
+    padding: 8px 12px;
+  }
+
   .wl-search-wrap {
     max-width: 100%;
   }

@@ -1,0 +1,232 @@
+/* ─────────────────────────────────────────────────────────────────
+   1. SHELL
+───────────────────────────────────────────────────────────────── */
+.footer {
+  position: relative;
+  background: var(--surface, #111118);
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+  margin-top: auto; /* push to bottom in flex column layout  */
+  font-family: var(--font-body, "DM Sans", sans-serif);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   2. ACCENT LINE
+───────────────────────────────────────────────────────────────── */
+.footer-accent-line {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--red, #e50914) 0%,
+    rgba(229, 9, 20, 0.4) 25%,
+    transparent 60%
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   3. INNER GRID
+───────────────────────────────────────────────────────────────── */
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.8fr repeat(3, 1fr);
+  gap: 40px 60px;
+  padding: 48px 5vw 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   4. BRAND COLUMN
+───────────────────────────────────────────────────────────────── */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-logo {
+  font-family: var(--font-display, "Bebas Neue", sans-serif);
+  font-size: 1.8rem;
+  letter-spacing: 2.5px;
+  color: var(--red, #e50914);
+  text-decoration: none;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(229, 9, 20, 0.25);
+  transition: text-shadow 0.25s;
+  width: fit-content;
+}
+.footer-logo span {
+  color: var(--text, #e8e8f0);
+}
+.footer-logo:hover {
+  text-shadow: 0 0 32px rgba(229, 9, 20, 0.5);
+}
+
+.footer-tagline {
+  font-size: 0.83rem;
+  color: var(--muted, #7a7a9a);
+  line-height: 1.65;
+  max-width: 280px;
+  margin: 0;
+}
+
+/* TMDB attribution */
+.footer-tmdb {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+  border-radius: 8px;
+}
+.footer-tmdb svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--muted, #7a7a9a);
+}
+.footer-tmdb span {
+  font-size: 0.7rem;
+  color: var(--muted, #7a7a9a);
+  line-height: 1.55;
+}
+.footer-tmdb-link {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.footer-tmdb-link:hover {
+  color: #93c5fd;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   5. NAV COLUMNS
+───────────────────────────────────────────────────────────────── */
+.footer-nav-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-col-heading {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text, #e8e8f0);
+  margin: 0;
+}
+
+.footer-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-nav-link {
+  font-size: 0.83rem;
+  color: var(--muted, #7a7a9a);
+  text-decoration: none;
+  transition:
+    color 0.18s,
+    padding-left 0.18s;
+  display: inline-block;
+}
+.footer-nav-link:hover {
+  color: var(--text, #e8e8f0);
+  padding-left: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   6. BOTTOM BAR
+───────────────────────────────────────────────────────────────── */
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 5vw;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: var(--muted, #7a7a9a);
+  margin: 0;
+}
+
+/* Social icon buttons */
+.footer-social {
+  display: flex;
+  gap: 8px;
+}
+
+.footer-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+  color: var(--muted, #7a7a9a);
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+}
+.footer-social-btn:hover {
+  background: rgba(229, 9, 20, 0.12);
+  border-color: rgba(229, 9, 20, 0.3);
+  color: var(--text, #e8e8f0);
+  transform: translateY(-2px);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   7. RESPONSIVE
+───────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+  }
+  /* Brand spans both columns at the top */
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+  .footer-tagline {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    padding: 36px 4vw 32px;
+    gap: 28px 20px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 4vw;
+  }
+  .footer-logo {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}

@@ -89,6 +89,11 @@ const TvShows = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   /* ── Load genres + spotlight once ── */
   useEffect(() => {
     getTvGenres().then(setGenres).catch(console.error);
@@ -240,27 +245,22 @@ const TvShows = () => {
           {
             icon: (
               <svg
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                fill="#f5c518"
+                stroke="none"
               >
-                {/* Trophy — Award Winners */}
-                <polyline points="8 21 12 17 16 21" />
-                <path d="M6 3H18" />
-                <path d="M6 3v4a6 6 0 0 0 12 0V3" />
-                <path d="M6 7c-1.11 0-2 .89-2 2v1a4 4 0 0 0 8 0V9a2 2 0 0 0-2-2" />
-                <path d="M18 7c1.11 0 2 .89 2 2v1a4 4 0 0 1-8 0V9a2 2 0 0 1 2-2" />
-                <line x1="12" y1="17" x2="12" y2="12" />
+                {/* Star — Avg Rating */}
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
               </svg>
             ),
-            value: "Top",
-            label: "Award Winners",
-            color: "#f59e0b",
+            value: (
+              shows.reduce((s, m) => s + (m.vote_average ?? 0), 0) /
+              shows.length
+            ).toFixed(1),
+            label: "Avg Rating",
+            color: "#f5c518",
           },
         ].map((s) => (
           <div className="stat-pill" key={s.label}>

@@ -10,23 +10,29 @@ import Trending from "./pages/Trending";
 import Genres from "./pages/Genres";
 import Actors from "./pages/Actors";
 import WatchList from "./pages/WatchList";
+import ActorProfilePage from "./pages/ActorProfilePage";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <MovieProvider>
-      <NavBar />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/tvshows" element={<TvShows />} />
-          <Route path="/actors" element={<Actors />} />
-          <Route path="/trending" element={<Trending />} />
-          <Route path="/genres" element={<Genres />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/watchlist" element={<WatchList />} />
-        </Routes>
-      </main>
+      <div className="app-shell">
+        <NavBar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/tvshows" element={<TvShows />} />
+            <Route path="/actors" element={<Actors />} />
+            <Route path="/actors/:id" element={<ActorProfilePage />} />
+            <Route path="/trending" element={<Trending />} />
+            <Route path="/genres" element={<Genres />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/watchlist" element={<WatchList />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </MovieProvider>
   );
 }

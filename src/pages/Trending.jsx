@@ -118,6 +118,11 @@ const Trending = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   /* ── Main fetch ── */
   const loadTrendingShows = useCallback(
     async (page = 1, append = false) => {
@@ -298,8 +303,8 @@ const Trending = () => {
         <div className="trending-layout">
           {/* ── Left: ranked card grid ── */}
           <div className="trending-grid-col">
-            <div className="section-header">
-              <h2 className="section-title">🔥 Trending {timeWindow}</h2>
+            <div className="section-header" style={{ padding: 0 }}>
+              <h2 className="section-title">🔥 Trending {timeWindowLabel}</h2>
             </div>
             <div
               className="page-grid"
@@ -409,7 +414,7 @@ const Trending = () => {
                           .slice(0, contents.length)
                           .reduce((acc, m) => acc + (m.vote_average || 0), 0) /
                         contents.length
-                      ).toFixed(1)
+                      ).toFixed(2)
                     : "—"}
                 </strong>
               </div>

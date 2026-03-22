@@ -256,6 +256,11 @@ const Genres = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   /* ── Load genres on mount ── */
   useEffect(() => {
     getAllGenres()

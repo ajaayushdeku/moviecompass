@@ -73,6 +73,11 @@ const Movies = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
 
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   /* ── Load genres once ── */
   useEffect(() => {
     getMovieGenres().then(setGenres).catch(console.error);
@@ -175,17 +180,27 @@ const Movies = () => {
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
-                fill="#f5c518"
-                stroke="none"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                {/* Star — Avg Rating */}
-                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                {/* Theatre masks — Genres */}
+                <path d="M2 10s3-3 3-8" />
+                <path d="M22 10s-3-3-3-8" />
+                <path d="M10 2c0 4.4-3.6 8-8 8" />
+                <path d="M14 2c0 4.4 3.6 8 8 8" />
+                <path d="M2 10s2 2 2 5" />
+                <path d="M22 10s-2 2-2 5" />
+                <path d="M8 15s0 3 4 3 4-3 4-3" />
               </svg>
             ),
-            value: "8.9",
-            label: "Avg Rating",
-            color: "#f5c518",
+            value: genres.length,
+            label: "Genres",
+            color: "#a855f7",
           },
+
           {
             icon: (
               <svg
@@ -211,6 +226,26 @@ const Movies = () => {
           {
             icon: (
               <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="#f5c518"
+                stroke="none"
+              >
+                {/* Star — Avg Rating */}
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+              </svg>
+            ),
+            value: (
+              movies.reduce((s, m) => s + (m.vote_average ?? 0), 0) /
+              movies.length
+            ).toFixed(1),
+            label: "Avg Rating",
+            color: "#f5c518",
+          },
+          {
+            icon: (
+              <svg
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
@@ -227,7 +262,7 @@ const Movies = () => {
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
             ),
-            value: "2025",
+            value: new Date().getFullYear(),
             label: "Latest Year",
             color: "#8b5cf6",
           },

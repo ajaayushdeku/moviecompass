@@ -83,6 +83,11 @@ const Home = () => {
   const dropdownRef = useRef(null);
   const formRef = useRef(null);
 
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   /* ── Close dropdown on outside click ── */
   useEffect(() => {
     const handleClickOutside = (e) => {

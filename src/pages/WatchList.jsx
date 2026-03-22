@@ -112,13 +112,18 @@ const WatchList = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [viewMode, setViewMode] = useState("list");
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLoad, setCurrentLoad] = useState(5);
+  const [currentLoad, setCurrentLoad] = useState(viewMode === "grid" ? 10 : 5);
   const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
 
   /* ── Reset pagination whenever any filter/sort/search changes ── */
   useEffect(() => {
-    setCurrentLoad(5);
-  }, [sortBy, filterType, filterStatus, searchQuery]);
+    setCurrentLoad(viewMode === "grid" ? 10 : 5);
+  }, [sortBy, viewMode, filterType, filterStatus, searchQuery]);
 
   /* ── Filter by media type ── */
   const mediaTypeFiltered = useMemo(() => {
@@ -145,7 +150,7 @@ const WatchList = () => {
         );
       case "year":
         return arr.sort((a, b) =>
-          (b.release_date ?? "0").localeCompare(a.release_date ?? ""),
+          (b.release_date ?? "").localeCompare(a.release_date ?? ""),
         );
       case "title":
         return arr.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
@@ -158,10 +163,12 @@ const WatchList = () => {
   const searched = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return sorted;
-    return sorted.filter((m) => m.title?.toLowerCase().includes(q));
+    return sorted.filter((m) =>
+      (m.title ?? m.name ?? "").toLowerCase().includes(q),
+    );
   }, [sorted, searchQuery]);
 
-  // ── Pagination ────────────────────────────────────────────────────
+  /* ── Pagination ── */
   const totalItems = searched.length;
   const hasMore = currentLoad < totalItems;
   const visibleWatchListItems = searched.slice(0, currentLoad);
@@ -170,7 +177,7 @@ const WatchList = () => {
   const handleLoadMore = () => {
     setLoadingMore(true);
     setTimeout(() => {
-      setCurrentLoad((prev) => Math.min(prev + 10, count));
+      setCurrentLoad((prev) => Math.min(prev + 5, count));
       setLoadingMore(false);
     }, 1500); // Simulate loading delay
   };
@@ -370,8 +377,8 @@ const WatchList = () => {
           {
             icon: (
               <svg
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="#f5c518"
                 stroke="none"

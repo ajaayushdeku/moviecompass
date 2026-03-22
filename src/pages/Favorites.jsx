@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "../css/Favorites.css";
 import { useMovieContext } from "../contexts/MovieContext";
 import MovieCard from "../components/MovieCard";
@@ -14,7 +14,7 @@ const SORT_OPTIONS = [
 const FILTER_CHIPS = ["All", "Movies", "TV Shows"];
 
 const Favorites = () => {
-  const { favorites } = useMovieContext();
+  const { favorites, isFavorite, removeFromFavorites } = useMovieContext();
   const count = favorites.length;
 
   // UI-only state — logic wired in next step
@@ -22,6 +22,81 @@ const Favorites = () => {
   const [filterType, setFilterType] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState("grid"); // "grid" | "list"
+  const [currentLoad, setCurrentLoad] = useState(viewMode === "grid" ? 10 : 5);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  /* ── Reset pagination whenever any filter/sort/search changes ── */
+  useEffect(() => {
+    setCurrentLoad(viewMode === "grid" ? 10 : 5);
+  }, [sortBy, viewMode, filterType, searchQuery]);
+
+  /* ── Filter by media type ── */
+  const mediaTypeFilter = useMemo(() => {
+    if (filterType === "Movies")
+      return favorites.filter((fav) => fav.media_type === "movie");
+    if (filterType === "TV Shows")
+      return favorites.filter((fav) => fav.media_type === "tv");
+    return favorites;
+  }, [filterType, favorites]);
+
+  /* ── Sorting ── */
+  const sortedFiltered = useMemo(() => {
+    const arr = [...mediaTypeFilter];
+    switch (sortBy) {
+      case "rating":
+        return arr.sort(
+          (a, b) => (b.vote_average ?? 0) - (a.vote_average ?? 0),
+        );
+      case "year":
+        return arr.sort((a, b) =>
+          (b.release_date ?? b.first_air_date ?? "").localeCompare(
+            a.release_date ?? a.first_air_date ?? "",
+          ),
+        );
+      case "title":
+        return arr.sort((a, b) => (a.title ?? "").localeCompare(b.title ?? ""));
+      default:
+        return arr;
+    }
+  }, [mediaTypeFilter, sortBy]);
+
+  /* ── Search filter ── */
+  const searchFavorites = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return sortedFiltered;
+    return sortedFiltered.filter((fav) =>
+      (fav.title ?? fav.name ?? "").toLowerCase().includes(q),
+    );
+  }, [searchQuery, sortedFiltered]);
+
+  /* ── Pagination ── */
+  const totalItems = searchFavorites.length;
+  const hasMore = currentLoad < totalItems;
+  const visibleFavoriteItems = searchFavorites.slice(0, currentLoad);
+
+  /* ── Load more handler ── */
+  const handleLoadMore = () => {
+    setLoadingMore(true);
+    setTimeout(() => {
+      setCurrentLoad((prev) => Math.min(prev + 5, count));
+      setLoadingMore(false);
+    }, 1500); // Simulate loading delay
+  };
+
+  /* ── Stats ── */
+  const movieCount = favorites.filter((m) => m.media_type !== "tv").length;
+  const tvCount = favorites.filter((m) => m.media_type === "tv").length;
+  const avgRating = (
+    favorites.reduce((s, m) => s + (m.vote_average ?? 0), 0) / count
+  ).toFixed(1);
+
+  // ── Active filter indicator ───────────────────────────────────────
+  const isFiltered = searchQuery.trim() !== "" || filterType !== "All";
 
   /* ════ EMPTY STATE ════════════════════════════════════════════════ */
   if (count === 0) {
@@ -70,16 +145,6 @@ const Favorites = () => {
       </div>
     );
   }
-
-  // Counts for stat pills (UI only — no filtering logic yet)
-  const movieCount = favorites.filter((m) => m.media_type !== "tv").length;
-  const tvCount = favorites.filter((m) => m.media_type === "tv").length;
-  const avgRating = (
-    favorites.reduce((s, m) => s + (m.vote_average ?? 0), 0) / count
-  ).toFixed(1);
-
-  // ── Active filter indicator ───────────────────────────────────────
-  const isFiltered = searchQuery.trim() !== "" || filterType !== "All";
 
   /* ════ HAS ITEMS ══════════════════════════════════════════════════ */
   return (
@@ -135,7 +200,7 @@ const Favorites = () => {
             ),
             value: movieCount,
             label: "Movies",
-            color: "#e50914",
+            color: "#ff3943",
           },
           {
             icon: (
@@ -160,8 +225,8 @@ const Favorites = () => {
           {
             icon: (
               <svg
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="#f5c518"
                 stroke="none"
@@ -176,8 +241,8 @@ const Favorites = () => {
           {
             icon: (
               <svg
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -191,6 +256,7 @@ const Favorites = () => {
                 <path d="M6 7c-1.11 0-2 .89-2 2v1a4 4 0 0 0 8 0V9a2 2 0 0 0-2-2" />
                 <path d="M18 7c1.11 0 2 .89 2 2v1a4 4 0 0 1-8 0V9a2 2 0 0 1 2-2" />
                 <line x1="12" y1="17" x2="12" y2="12" />
+                <line x1="8" y1="21.5" x2="16" y2="21.5" />
               </svg>
             ),
             value: favorites.filter((m) => (m.vote_average ?? 0) >= 8).length,
@@ -233,6 +299,7 @@ const Favorites = () => {
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
+
           <input
             type="text"
             placeholder="Filter your favorites…"
@@ -242,6 +309,7 @@ const Favorites = () => {
             autoComplete="off"
             aria-label="Filter favorites"
           />
+
           {searchQuery && (
             <button
               type="button"
@@ -353,7 +421,8 @@ const Favorites = () => {
       {/* Result count when filtering */}
       {isFiltered && (
         <div className="wl-result-count">
-          {favorites.length} result{favorites.length !== 1 ? "s" : ""}
+          {searchFavorites.length} result
+          {searchFavorites.length !== 1 ? "s" : ""}
           {searchQuery.trim() && ` for "${searchQuery.trim()}"`}
           <button
             type="button"
@@ -368,113 +437,186 @@ const Favorites = () => {
         </div>
       )}
 
-      {/* ══ GRID VIEW ════════════════════════════════════════════════ */}
-      {viewMode === "grid" && (
-        <section className="favorites-grid-section">
-          <div className="movies-grid">
-            {favorites.map((movie, i) => (
-              <div
-                key={movie.id}
-                style={{ animationDelay: `${Math.min(i * 50, 700)}ms` }}
-              >
-                <MovieCard movie={movie} />
+      {/* ══ CONTENT ══════════════════════════════════════════════════ */}
+      {searchFavorites.length === 0 ? (
+        <div className="wl-empty-state">
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ opacity: 0.25 }}
+          >
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+          <h3>No matches</h3>
+          {searchQuery.trim() !== "" ? (
+            <p>
+              No titles matching "<strong>{searchQuery.trim()}</strong>"
+            </p>
+          ) : (
+            <p>Try adjusting your filters.</p>
+          )}
+        </div>
+      ) : (
+        <>
+          {viewMode === "grid" ? (
+            /* ══ GRID VIEW ════════════════════════════════════════════════ */
+            <section className="favorites-grid-section">
+              <div className="movies-grid">
+                {visibleFavoriteItems.map((movie, i) => (
+                  <div
+                    key={movie.id}
+                    style={{ animationDelay: `${Math.min(i * 50, 700)}ms` }}
+                  >
+                    <MovieCard movie={movie} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+            </section>
+          ) : (
+            /* ══ LIST VIEW ════════════════════════════════════════════════ */ <section className="fav-list-section">
+              {visibleFavoriteItems.map((movie, i) => {
+                const favorite = isFavorite(movie.id);
+                return (
+                  <div
+                    key={movie.id}
+                    className="fav-list-row"
+                    style={{ animationDelay: `${Math.min(i * 35, 500)}ms` }}
+                  >
+                    {/* Rank */}
+                    <span className="fav-list-rank">#{i + 1}</span>
 
-      {/* ══ LIST VIEW ════════════════════════════════════════════════ */}
-      {viewMode === "list" && (
-        <section className="fav-list-section">
-          {favorites.map((movie, i) => (
+                    {/* Poster */}
+                    <div className="fav-list-thumb">
+                      {movie.poster_path ? (
+                        <img
+                          src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                          alt={movie.title}
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="fav-list-thumb-placeholder">
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            style={{ opacity: 0.2 }}
+                          >
+                            <rect
+                              x="2"
+                              y="2"
+                              width="20"
+                              height="20"
+                              rx="2.18"
+                            />
+                            <line x1="7" y1="2" x2="7" y2="22" />
+                            <line x1="17" y1="2" x2="17" y2="22" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Info */}
+                    <div className="fav-list-info">
+                      <h3 className="fav-list-title">
+                        {movie.title ?? movie.name}
+                      </h3>
+                      <div className="fav-list-meta">
+                        <span className="fav-list-year">
+                          {
+                            (
+                              movie.release_date ??
+                              movie.first_air_date ??
+                              ""
+                            ).split("-")[0]
+                          }
+                        </span>
+                        <span
+                          className={`fav-list-type fav-list-type--${movie.media_type ?? "movie"}`}
+                        >
+                          {movie.media_type === "tv" ? "TV" : "Movie"}
+                        </span>
+                        <span className="fav-list-rating">
+                          <svg
+                            width="10"
+                            height="10"
+                            viewBox="0 0 24 24"
+                            fill="#f5c518"
+                            stroke="none"
+                          >
+                            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                          </svg>
+                          {movie.vote_average?.toFixed(1) ?? "—"}
+                        </span>
+                      </div>
+                      {movie.overview && (
+                        <p className="fav-list-overview">{movie.overview}</p>
+                      )}
+                    </div>
+
+                    {/* Favourite (filled heart — always active on this page) */}
+                    <div
+                      className={`fav-list-heart ${favorite ? "active" : ""}`}
+                      type="button"
+                      aria-label="Remove from favorites"
+                      title={`Remove ${movie.title || movie.name} from favorites`}
+                      onClick={() => removeFromFavorites(movie.id)}
+                    >
+                      ❤
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
+          {hasMore && (
             <div
-              key={movie.id}
-              className="fav-list-row"
-              style={{ animationDelay: `${Math.min(i * 35, 500)}ms` }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "32px 0 8px",
+              }}
             >
-              {/* Rank */}
-              <span className="fav-list-rank">#{i + 1}</span>
-
-              {/* Poster */}
-              <div className="fav-list-thumb">
-                {movie.poster_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
-                    alt={movie.title}
-                    loading="lazy"
-                  />
+              <button
+                className="load-more-btn"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? (
+                  <span className="load-more-spinner" />
                 ) : (
-                  <div className="fav-list-thumb-placeholder">
+                  <>
+                    Load More{" "}
                     <svg
-                      width="18"
-                      height="18"
+                      width="14"
+                      height="14"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="1.2"
+                      strokeWidth="2.2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      style={{ opacity: 0.2 }}
                     >
-                      <rect x="2" y="2" width="20" height="20" rx="2.18" />
-                      <line x1="7" y1="2" x2="7" y2="22" />
-                      <line x1="17" y1="2" x2="17" y2="22" />
-                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <polyline points="6 9 12 15 18 9" />
                     </svg>
-                  </div>
+                  </>
                 )}
-              </div>
-
-              {/* Info */}
-              <div className="fav-list-info">
-                <h3 className="fav-list-title">{movie.title ?? movie.name}</h3>
-                <div className="fav-list-meta">
-                  <span className="fav-list-year">
-                    {
-                      (movie.release_date ?? movie.first_air_date ?? "").split(
-                        "-",
-                      )[0]
-                    }
-                  </span>
-                  <span
-                    className={`fav-list-type fav-list-type--${movie.media_type ?? "movie"}`}
-                  >
-                    {movie.media_type === "tv" ? "TV" : "Movie"}
-                  </span>
-                  <span className="fav-list-rating">
-                    <svg
-                      width="10"
-                      height="10"
-                      viewBox="0 0 24 24"
-                      fill="#f5c518"
-                      stroke="none"
-                    >
-                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-                    </svg>
-                    {movie.vote_average?.toFixed(1) ?? "—"}
-                  </span>
-                </div>
-                {movie.overview && (
-                  <p className="fav-list-overview">{movie.overview}</p>
-                )}
-              </div>
-
-              {/* Favourite (filled heart — always active on this page) */}
-              <div className="fav-list-heart">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="#e50914"
-                  stroke="none"
-                >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-              </div>
+              </button>
             </div>
-          ))}
-        </section>
+          )}
+        </>
       )}
     </div>
   );
