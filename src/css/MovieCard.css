@@ -156,7 +156,7 @@
 .favorite-btn:hover {
   background: rgba(229, 9, 20, 0.88);
   color: #fff;
-  transform: scale(1.12);
+  transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
 }
 
@@ -184,8 +184,8 @@
   top: 40px;
   right: 5px;
 
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -212,6 +212,7 @@
   background: rgba(59, 130, 246, 0.75); /* blue — distinct from red favourite */
   border-color: transparent;
   color: #fff;
+  transform: scale(1.1);
 }
 .watchlist-btn.active {
   background: rgba(59, 130, 246, 0.85);
@@ -220,6 +221,7 @@
 }
 .watchlist-btn.active:hover {
   background: rgba(37, 99, 235, 0.9);
+  transform: scale(1.1);
 }
 
 /* ══ RATING BADGE ════════════════════════ */

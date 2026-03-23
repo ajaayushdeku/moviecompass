@@ -133,8 +133,8 @@ const MovieCard = ({ movie }) => {
               {watchlisted ? (
                 /* Bookmarked (filled) */
                 <svg
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   stroke="none"
@@ -145,8 +145,8 @@ const MovieCard = ({ movie }) => {
               ) : (
                 /* Not bookmarked (outline) */
                 <svg
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"

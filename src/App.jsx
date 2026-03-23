@@ -12,6 +12,7 @@ import Actors from "./pages/Actors";
 import WatchList from "./pages/WatchList";
 import ActorProfilePage from "./pages/ActorProfilePage";
 import Footer from "./components/Footer";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/genres" element={<Genres />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/watchlist" element={<WatchList />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

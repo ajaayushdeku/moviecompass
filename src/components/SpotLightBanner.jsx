@@ -53,7 +53,7 @@ const SpotlightBanner = ({ show }) => {
       removeFromFavorites(show.id);
     } else {
       // Normalize TV fields + strip videos before storing in favorites
-      const { videos: _v, status: _s, ...cleanShow } = show;
+      const { status: _s, ...cleanShow } = show;
       addToFavorites({
         ...cleanShow,
         title: show.name ?? show.original_name,
@@ -70,7 +70,7 @@ const SpotlightBanner = ({ show }) => {
       // Strip videos, status, and normalize TV fields before storing.
       // addWatchList in context also strips status, but doing it here
       // keeps the stored object clean and predictable.
-      const { videos: _v, status: _s, ...cleanShow } = show;
+      const { status: _s, ...cleanShow } = show;
       addWatchList({
         ...cleanShow,
         title: show.name ?? show.original_name,
@@ -106,7 +106,7 @@ const SpotlightBanner = ({ show }) => {
 
         {/* Meta row */}
         <div className="spotlight-meta">
-          <span className="spotlight-meta-item">
+          <span className="spotlight-meta-item" style={{ color: "#f5c518" }}>
             <svg
               width="12"
               height="12"

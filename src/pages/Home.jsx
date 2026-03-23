@@ -14,6 +14,7 @@ import {
 } from "../services/api";
 import MovieTrailerModal from "../components/MovieTrailerModal";
 import MediaIcon from "../components/MediaIcon";
+import { useMovieContext } from "../contexts/MovieContext";
 
 /* ── quick-search suggestions ── */
 const HINTS = ["Inception", "Action", "2024", "Marvel", "Horror", "Sci-Fi"];
@@ -63,6 +64,15 @@ const attachVideos = async (shows, { media_type } = {}) => {
 };
 
 const Home = () => {
+  const {
+    isFavorite,
+    isWatchListed,
+    addToFavorites,
+    addWatchList,
+    removeFromFavorites,
+    removeFromWatchList,
+  } = useMovieContext();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -293,6 +303,49 @@ const Home = () => {
     (v) => v.type === "Trailer" && v.site === "YouTube",
   );
 
+  const favorite = nowPlayingBanner ? isFavorite(nowPlayingBanner.id) : false;
+  const watchlisted = nowPlayingBanner
+    ? isWatchListed(nowPlayingBanner.id)
+    : false;
+
+  // ── Favourite toggle ─────────────────────────────────────────────
+  const onFavoriteClick = () => {
+    if (favorite) {
+      removeFromFavorites(nowPlayingBanner.id);
+    } else {
+      // Normalize TV fields + strip videos before storing in favorites
+      const { status: _s, ...cleanShow } = nowPlayingBanner;
+      addToFavorites({
+        ...cleanShow,
+        title:
+          nowPlayingBanner.title ??
+          nowPlayingBanner.name ??
+          nowPlayingBanner.original_name,
+        release_date: nowPlayingBanner.first_air_date,
+      });
+    }
+  };
+
+  // ── Watchlist toggle ─────────────────────────────────────────────
+  const onWatchListClick = () => {
+    if (watchlisted) {
+      removeFromWatchList(nowPlayingBanner.id);
+    } else {
+      // Strip videos, status, and normalize TV fields before storing.
+      // addWatchList in context also strips status, but doing it here
+      // keeps the stored object clean and predictable.
+      const { status: _s, ...cleanShow } = nowPlayingBanner;
+      addWatchList({
+        ...cleanShow,
+        title:
+          nowPlayingBanner.title ??
+          nowPlayingBanner.name ??
+          nowPlayingBanner.original_name,
+        release_date: nowPlayingBanner.first_air_date,
+      });
+    }
+  };
+
   return (
     <div className="home">
       {/* ══ HERO ══════════════════════════════ */}
@@ -511,7 +564,7 @@ const Home = () => {
               {nowPlayingBanner.overview?.slice(0, 120)}…
             </p>
             <div className="now-playing-meta">
-              <span className="now-playing-rating">
+              <span className="now-playing-rating" style={{ color: "#f5c518" }}>
                 <svg
                   width="12"
                   height="12"
@@ -523,7 +576,10 @@ const Home = () => {
                 </svg>
                 {nowPlayingBanner.vote_average?.toFixed(1)}
               </span>
-              <span>{nowPlayingBanner.release_date?.split("-")[0]}</span>
+              <span className="now-playing-rating">
+                {nowPlayingBanner.release_date?.split("-")[0]}
+              </span>
+
               <div className="spotlight-actions">
                 {/* ── Watch Trailer ── */}
                 <button
@@ -569,6 +625,70 @@ const Home = () => {
                       ? "Watch Trailer"
                       : "No Trailer"}
                 </button>
+
+                {/* Add to Favourite */}
+                <div
+                  type="button"
+                  className={`detail-fav-btn ${favorite ? "detail-fav-btn--active" : ""}`}
+                  onClick={onFavoriteClick}
+                  title={
+                    favorite ? "Remove from Favorites" : "Add to Favorites"
+                  }
+                  aria-pressed={favorite}
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill={favorite ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                  {favorite ? "Saved" : "Add to Favorites"}
+                </div>
+
+                {/* Add to Watchlist — use <button> not <div> */}
+                <div
+                  type="button"
+                  className={`detail-watchlist-btn ${watchlisted ? "detail-watchlist-btn--active" : ""}`}
+                  onClick={onWatchListClick}
+                  aria-label={
+                    watchlisted ? "Remove from watchlist" : "Add to watchlist"
+                  }
+                  aria-pressed={watchlisted}
+                >
+                  {watchlisted ? (
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      stroke="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                    </svg>
+                  ) : (
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                    </svg>
+                  )}
+                  {watchlisted ? "In Watchlist" : "Add to Watchlist"}
+                </div>
               </div>
 
               {/* ── Trailer Modal ── */}
