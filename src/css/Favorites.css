@@ -679,9 +679,14 @@
     padding-left: 4vw;
     padding-right: 4vw;
   }
+  .fav-stats-strip {
+    padding: 0 3vw 18px;
+    gap: 6px;
+  }
   .fav-stat-pill {
-    min-width: 90px;
-    padding: 8px 12px;
+    padding: 7px 10px;
+    width: 30%;
+    min-width: calc(50% - 3px);
   }
   .favorites-toolbar {
     padding: 0 4vw 18px;

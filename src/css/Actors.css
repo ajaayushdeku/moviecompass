@@ -8,13 +8,81 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   2. SEARCH BAR
+   2. PAGE HERO HEADER
+───────────────────────────────────────────────────────────────── */
+.actor-page-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 65% 60% at 0% 50%,
+      rgba(229, 9, 20, 0.1) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 50% 70% at 100% 20%,
+      rgba(59, 130, 246, 0.05) 0%,
+      transparent 60%
+    );
+  pointer-events: none;
+}
+.actor-page-hero-noise {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.045) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  mask-image: radial-gradient(
+    ellipse 55% 90% at 0% 50%,
+    black 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+.actor-page-hero-content {
+  position: relative;
+  z-index: 1;
+}
+.actor-page-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red, #e50914);
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: actorFadeUp 0.5s 0.05s forwards;
+}
+.actor-page-title {
+  font-family: var(--font-display, "Bebas Neue", sans-serif);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  color: var(--text, #e8e8f0);
+  margin: 0 0 12px;
+  opacity: 0;
+  animation: actorFadeUp 0.5s 0.12s forwards;
+}
+.actor-page-title span {
+  color: var(--red, #e50914);
+}
+.actor-page-desc {
+  font-size: clamp(0.83rem, 1.5vw, 0.95rem);
+  color: var(--muted, #7a7a9a);
+  max-width: 480px;
+  line-height: 1.65;
+  opacity: 0;
+  animation: actorFadeUp 0.5s 0.2s forwards;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   3. SEARCH BAR
 ───────────────────────────────────────────────────────────────── */
 .actor-search-wrap {
   padding: 0 5vw 32px;
-  width: 100%;
-  display: inline-flex;
-  justify-content: center;
+  max-width: 660px;
 }
 /* when sitting above the profile view, add top padding */
 .actor-search-wrap--profile {
@@ -26,7 +94,8 @@
   z-index: 200;
   width: 100%;
   max-width: 600px;
-  animation: fadeUp 0.55s 0.35s forwards;
+  opacity: 0; /* required — animation starts invisible */
+  animation: actorFadeUp 0.55s 0.35s forwards;
 }
 
 .actor-search-form {
@@ -288,8 +357,8 @@
 
 /* Photo circle */
 .actor-grid-photo {
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.1);
@@ -331,20 +400,13 @@
   color: var(--red, #e50914);
 }
 .actor-grid-known {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
   font-size: 0.7rem;
   color: var(--muted, #7a7a9a);
-}
-.actor-grid-known span {
-  font-size: 0.7rem;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.4;
-  margin: 0;
 }
 
 /* Popularity badge */
@@ -415,13 +477,13 @@
   margin-bottom: 20px;
 }
 .actor-back-link {
-  margin-left: 12px;
   background: none;
   border: none;
-  color: var(--red);
+  color: var(--red, #e50914);
+  font-family: var(--font-body, "DM Sans", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.75rem;
-  font-family: var(--font-body);
   padding: 0;
   transition: opacity 0.2s;
 }
@@ -465,7 +527,6 @@
 /* ─────────────────────────────────────────────────────────────────
    7. PROFILE VIEW
 ───────────────────────────────────────────────────────────────── */
-
 .actor-profile-view {
   margin-top: 2rem;
 }
@@ -478,7 +539,8 @@
   margin: 0 5vw 6px;
   background: none;
   border: none;
-  color: var(--muted, #7a7a9a);
+  /* color: var(--muted, #7a7a9a); */
+  color: var(--red);
   font-family: var(--font-body, "DM Sans", sans-serif);
   font-size: 0.82rem;
   font-weight: 600;
@@ -797,7 +859,31 @@
   display: flex;
   gap: 6px;
 }
-
+.actor-filter-chip {
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted, #7a7a9a);
+  cursor: pointer;
+  font-family: var(--font-body, "DM Sans", sans-serif);
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    color 0.18s;
+}
+.actor-filter-chip:hover {
+  background: rgba(229, 9, 20, 0.1);
+  border-color: rgba(229, 9, 20, 0.3);
+  color: var(--text, #e8e8f0);
+}
+.actor-filter-chip--active {
+  background: rgba(229, 9, 20, 0.15);
+  border-color: var(--red, #e50914);
+  color: var(--text, #e8e8f0);
+}
 .actor-credits-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -826,42 +912,6 @@
     0 0 0 1.5px rgba(229, 9, 20, 0.3);
   border-color: rgba(229, 9, 20, 0.2);
 }
-.actor-credit-card .play-overlay {
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-.actor-credit-card:hover .play-overlay {
-  opacity: 1;
-}
-.actor-credit-card .play-btn-circle {
-  width: 44px;
-  height: 44px;
-  background: rgba(229, 9, 20, 0.88);
-  box-shadow:
-    0 0 0 6px rgba(229, 9, 20, 0.18),
-    0 4px 18px rgba(0, 0, 0, 0.65);
-  transition:
-    transform 0.2s,
-    background 0.2s;
-}
-.actor-credit-card .play-btn-circle:hover {
-  background: var(--red, #e50914);
-  transform: scale(1.12);
-}
-.actor-credit-card .play-btn-circle svg {
-  margin-left: 3px;
-}
-.actor-credit-card .play-btn-circle span {
-  display: block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: actorSpin 0.7s linear infinite;
-  margin-left: 0;
-}
-
 .actor-credit-poster {
   position: relative;
   aspect-ratio: 2/3;
@@ -907,20 +957,12 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  font-size: 0.6rem;
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 1px;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 7px;
-  border-radius: 5px;
-  backdrop-filter: blur(4px);
-  pointer-events: none;
-  z-index: 3;
   color: #fff;
-  text-transform: uppercase;
 }
 .actor-credit-type--movie {
   background: rgba(229, 9, 20, 0.8);
@@ -1076,8 +1118,15 @@
 
 /* ─────────────────────────────────────────────────────────────────
    11. RESPONSIVE
+   Breakpoints:
+     700px — profile hero switches to vertical stack
+     480px — phone portrait
+     360px — Samsung S8+ and similar small phones
 ───────────────────────────────────────────────────────────────── */
+
+/* ── 700px ── */
 @media (max-width: 700px) {
+  /* Profile hero — center everything */
   .actor-hero-inner {
     flex-direction: column;
     align-items: center;
@@ -1100,6 +1149,8 @@
   .actor-name {
     font-size: 2.4rem;
   }
+
+  /* Browse grid */
   .actor-people-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
@@ -1115,21 +1166,28 @@
   }
 }
 
+/* ── 480px — phone portrait ── */
 @media (max-width: 480px) {
+  /* Search bar */
   .actor-search-wrap {
     padding: 0 4vw 24px;
   }
-  .actor-stats-strip {
-    padding: 20px 4vw;
-    gap: 8px;
+  /* Prevent iOS auto-zoom — triggered when input font-size < 16px */
+  .actor-search-input {
+    font-size: 1rem;
   }
-  .actor-stats-pill {
-    min-width: 100px;
-    padding: 10px 14px;
+  /* Hide "Search" label text — keep icon for compact button */
+  .actor-search-btn span {
+    display: none;
   }
+  .actor-search-btn {
+    padding: 9px 12px;
+  }
+
+  /* Grids — 2 columns */
+  .actor-grid-section,
   .actor-photos-section,
-  .actor-credits-section,
-  .actor-grid-section {
+  .actor-credits-section {
     padding-left: 4vw;
     padding-right: 4vw;
   }
@@ -1141,11 +1199,224 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
+
+  /* Grid card — smaller photo circle so name/dept has room */
+  .actor-grid-photo {
+    width: 80px;
+    height: 80px;
+  }
+  .actor-grid-card {
+    padding: 14px 10px 12px;
+    gap: 8px;
+  }
+  .actor-grid-name {
+    font-size: 0.8rem;
+  }
+
+  .actor-back-btn {
+    padding: 6px 0;
+    font-size: 0.7rem;
+  }
+
+  /* Stats strip — 2×2 grid */
+  .actor-stats-strip {
+    padding: 20px 4vw;
+    gap: 8px;
+  }
+  .actor-stats-pill {
+    flex: 0 0 calc(50% - 4px);
+    min-width: unset;
+    padding: 10px 12px;
+  }
+
+  /* Photos strip */
   .actor-photo-thumb {
     width: 75px;
     height: 108px;
   }
+
+  /* Profile hero */
+  .actor-hero {
+    padding: 2.5rem 4vw 2rem;
+  }
+  .actor-photo {
+    width: 120px;
+    height: 180px;
+  }
+  .actor-name {
+    font-size: 2.2rem;
+  }
+
+  /* Credit card play button — always visible on touch (no hover state) */
+  .actor-credit-card .play-overlay {
+    opacity: 1;
+  }
+  .actor-credit-card .play-btn-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Dropdown */
   .actor-dropdown-footer {
     display: none;
   }
+}
+
+/* ── 360px — Samsung S8+ ── */
+@media (max-width: 360px) {
+  /* Search bar */
+  .actor-search-wrap {
+    padding: 0 3vw 18px;
+  }
+  .actor-search-icon {
+    padding: 0 8px 0 10px;
+  }
+  .actor-search-input {
+    padding: 12px 4px;
+  }
+  .actor-search-btn {
+    padding: 8px 10px;
+    margin: 4px;
+  }
+
+  /* Browse grid — tighter gaps */
+  .actor-grid-section,
+  .actor-photos-section,
+  .actor-credits-section {
+    padding-left: 3vw;
+    padding-right: 3vw;
+  }
+  .actor-people-grid {
+    gap: 8px;
+  }
+  .actor-credits-grid {
+    gap: 8px;
+  }
+
+  /* Grid card — at 360px each card is ~148px wide */
+  .actor-grid-card {
+    padding: 12px 8px 10px;
+    gap: 6px;
+  }
+  .actor-grid-photo {
+    width: 70px;
+    height: 70px;
+  }
+  .actor-grid-name {
+    font-size: 0.74rem;
+  }
+  .actor-grid-dept {
+    font-size: 0.58rem;
+  }
+  .actor-grid-known {
+    display: none;
+  } /* too cramped — hide known-for text */
+  .actor-grid-pop {
+    font-size: 0.58rem;
+    padding: 1px 5px;
+    top: 5px;
+    right: 5px;
+  }
+
+  /* Stats strip */
+  .actor-stats-strip {
+    padding: 14px 3vw;
+    gap: 6px;
+  }
+  .actor-stats-pill {
+    padding: 8px 10px;
+  }
+  .actor-stats-value {
+    font-size: 0.9rem;
+  }
+  .actor-stats-label {
+    font-size: 0.56rem;
+  }
+
+  /* Profile hero */
+  .actor-hero {
+    padding: 2rem 3vw 1.5rem;
+  }
+  .actor-photo {
+    width: 100px;
+    height: 150px;
+  }
+  .actor-name {
+    font-size: 2rem;
+  }
+  .actor-bio {
+    font-size: 0.8rem;
+  }
+
+  /* Section headers */
+  .actor-section-title {
+    font-size: 1.25rem;
+  }
+  .actor-grid-header {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Photos strip */
+  .actor-photo-thumb {
+    width: 62px;
+    height: 90px;
+  }
+
+  /* Load more */
+  .actor-load-more-btn {
+    padding: 9px 20px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CREDIT CARD — PLAY BUTTON OVERRIDES
+   The base .play-overlay and .play-btn-circle come from MovieCard.css
+   but they're triggered by .movie-card:hover. Credit cards use
+   .actor-credit-card as the parent, so we remap the hover trigger here.
+───────────────────────────────────────────────────────────────── */
+
+/* Show overlay on credit card hover instead of movie-card hover */
+.actor-credit-card .play-overlay {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.actor-credit-card:hover .play-overlay {
+  opacity: 1;
+}
+
+/* Slightly smaller circle to fit the narrower credit card width */
+.actor-credit-card .play-btn-circle {
+  width: 44px;
+  height: 44px;
+  background: rgba(229, 9, 20, 0.88);
+  box-shadow:
+    0 0 0 6px rgba(229, 9, 20, 0.18),
+    0 4px 18px rgba(0, 0, 0, 0.65);
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.actor-credit-card .play-btn-circle:hover {
+  background: var(--red, #e50914);
+  transform: scale(1.12);
+}
+
+/* Keep the optical centering on the play triangle */
+.actor-credit-card .play-btn-circle svg {
+  margin-left: 3px;
+}
+
+/* Spinner inside the play circle while videos are loading */
+.actor-credit-card .play-btn-circle span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: actorSpin 0.7s linear infinite;
+  /* margin-left intentionally 0 — spinner is symmetric, no optical offset needed */
+  margin-left: 0;
 }

@@ -407,9 +407,9 @@
   transform: translateY(0);
 }
 
-/* hide on very small cards where space is too tight */
-@media (max-width: 480px) {
-  .more-info-btn {
-    display: none;
+@media (max-width: 360px) {
+  .movie-card {
+    border-radius: 6px;
+    width: 8rem;
   }
 }

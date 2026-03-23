@@ -806,11 +806,22 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  .wl-stat-pill {
-    min-width: 90px;
-    padding: 8px 12px;
+  .wl-stats-strip {
+    padding: 0 3vw 18px;
+    gap: 6px;
   }
-
+  .wl-stat-pill {
+    padding: 7px 10px;
+    width: 30%;
+    min-width: calc(50% - 3px);
+  }
+  .wl-sort-select {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 85%;
+  }
   .wl-search-wrap {
     max-width: 100%;
   }
@@ -822,5 +833,9 @@
   }
   .wl-list-overview {
     display: none;
+  }
+
+  .wl-list-status-mod {
+    flex-direction: column;
   }
 }

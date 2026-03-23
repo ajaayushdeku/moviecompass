@@ -471,7 +471,7 @@
   display: flex;
   gap: 14px;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 5px;
 }
 
 .spotlight-meta-item {
@@ -484,6 +484,14 @@
 
 .spotlight-meta-item svg {
   color: #f5c518;
+}
+
+.spotlight-overview {
+  font-size: 0.83rem;
+  color: var(--muted);
+  max-width: 480px;
+  line-height: 1.55;
+  margin: 0 0 16px;
 }
 
 .spotlight-actions {
@@ -512,6 +520,9 @@
 .btn-primary:hover {
   background: #ff1a25;
   transform: translateY(-1px);
+}
+.btn-label {
+  font-size: 0.78rem;
 }
 
 /* ══ STAT PILLS ══════════════════════════ */
@@ -627,7 +638,148 @@
   .spotlight-title {
     font-size: 1.5rem;
   }
+
   .stat-pills {
     padding: 0 4vw 22px;
+  }
+}
+/* ── 360px — Samsung S8+ ─────────────── */
+@media (max-width: 360px) {
+  /* Hero — reduce top padding */
+  .page-hero {
+    padding: 2rem 3vw 1.5rem;
+  }
+  .page-title {
+    font-size: clamp(2.4rem, 9vw, 5.5rem);
+  }
+  .page-desc {
+    font-size: 0.82rem;
+  }
+
+  /* Grids — 2 columns, tighter gap */
+  .page-grid,
+  .row-grid,
+  .skeleton-grid {
+    gap: 8px;
+    padding: 0 3vw;
+  }
+
+  /* Filter chips — fit more per row */
+  .filter-bar {
+    padding: 0 3vw 16px;
+    gap: 5px;
+  }
+  .filter-chip {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+
+  /* Sort row */
+  .sort-row {
+    padding: 0 3vw 14px;
+  }
+  .sort-select {
+    font-size: 0.74rem;
+    padding: 6px 10px;
+    min-width: 110px;
+  }
+
+  /* Section header */
+  .section-header {
+    padding: 0 3vw;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  /* Stat pills — 2 per row still, just smaller */
+  .stat-pills {
+    padding: 0 3vw 18px;
+    gap: 6px;
+  }
+  .stat-pill {
+    padding: 7px 10px;
+    width: 30%;
+    min-width: calc(50% - 3px);
+  }
+  .stat-pill-value {
+    font-size: 0.82rem;
+  }
+  .stat-pill-label {
+    font-size: 0.58rem;
+  }
+
+  /* Genre card — slightly taller for content breathing room */
+  .genre-card {
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+  }
+  .genre-card-body {
+    padding: 10px 12px;
+  }
+  .genre-card-name {
+    font-size: 0.95rem;
+  }
+  .genre-card-icon {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+  .genre-card-count {
+    font-size: 0.62rem;
+  }
+  .genre-card-arrow {
+    width: 22px;
+    height: 22px;
+    top: 8px;
+    right: 8px;
+  }
+
+  /* Rank badge */
+  .rank-badge {
+    font-size: 2.5rem;
+    top: -4px;
+    left: -4px;
+  }
+
+  /* Spotlight banner */
+  .spotlight-banner {
+    min-height: 190px;
+    margin: 0 3vw 22px;
+    border-radius: 12px;
+  }
+  .spotlight-content {
+    padding: 12px;
+  }
+  .spotlight-title {
+    font-size: 1.2rem;
+  }
+  .spotlight-meta {
+    gap: 8px;
+  }
+  .spotlight-meta-item {
+    font-size: 0.7rem;
+  }
+  .spotlight-overview {
+    font-size: 0.74rem;
+    max-width: 100%;
+  }
+
+  /* Action buttons — icon only at 360px by hiding text labels */
+  .btn-primary .btn-label,
+  .btn-ghost .btn-label {
+    display: none;
+  }
+  .btn-primary,
+  .btn-ghost {
+    padding: 9px 20px;
+  }
+  .spotlight-actions .action-label {
+    display: none;
+  }
+
+  /* Divider */
+  .page-divider {
+    margin: 0 3vw 22px;
   }
 }

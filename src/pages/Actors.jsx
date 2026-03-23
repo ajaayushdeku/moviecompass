@@ -410,7 +410,7 @@ const Actors = () => {
         <div className="actor-grid-header">
           <h2 className="actor-section-title">{gridTitle}</h2>
           <div className="actor-section-count">
-            {gridItems.length} title{gridItems.length !== 1 ? "s" : ""}
+            {gridItems.length} people
             {view === "grid" && (
               <button
                 type="button"

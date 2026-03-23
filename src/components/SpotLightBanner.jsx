@@ -129,15 +129,7 @@ const SpotlightBanner = ({ show }) => {
         </div>
 
         {/* Overview */}
-        <p
-          style={{
-            fontSize: "0.83rem",
-            color: "var(--muted)",
-            maxWidth: 380,
-            lineHeight: 1.55,
-            margin: "0 0 16px",
-          }}
-        >
+        <p className="spotlight-overview" title={show.overview}>
           {show.overview?.slice(0, 120)}…
         </p>
 
@@ -181,11 +173,13 @@ const SpotlightBanner = ({ show }) => {
                 <polygon points="5,3 19,12 5,21" />
               </svg>
             )}
-            {loadingVideos
-              ? "Loading…"
-              : hasTrailer
-                ? "Watch Trailer"
-                : "No Trailer"}
+            <span className="btn-label">
+              {loadingVideos
+                ? "Loading…"
+                : hasTrailer
+                  ? "Watch Trailer"
+                  : "No Trailer"}
+            </span>
           </button>
 
           {/* Add to Favourite */}
@@ -208,7 +202,9 @@ const SpotlightBanner = ({ show }) => {
             >
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
-            {favorite ? "Saved" : "Add to Favorites"}
+            <span className="action-label">
+              {favorite ? "Saved" : "Add to Favorites"}
+            </span>
           </div>
 
           {/* Add to Watchlist — use <button> not <div> */}
@@ -247,7 +243,9 @@ const SpotlightBanner = ({ show }) => {
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
             )}
-            {watchlisted ? "In Watchlist" : "Add to Watchlist"}
+            <span className="action-label">
+              {watchlisted ? "In Watchlist" : "Add to Watchlist"}
+            </span>
           </div>
         </div>
       </div>

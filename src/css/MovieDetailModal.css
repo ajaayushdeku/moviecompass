@@ -1,11 +1,3 @@
-/* ─────────────────────────────────────────────────────────────────
-   MovieDetailModal.css  –  MovieCompass
-   Layout: full-screen backdrop → centred dialog →
-           [backdrop hero image]
-           [poster | info column]
-           [trailer iframe]
-───────────────────────────────────────────────────────────────── */
-
 /* ══ BACKDROP ═══════════════════════════════════════════════════ */
 .detail-backdrop {
   position: fixed;
@@ -408,10 +400,12 @@
 }
 
 @media (max-width: 400px) {
+  .detail-backdrop {
+    align-items: center;
+    padding: 0 2px;
+  }
+
   .detail-poster-wrap {
     display: none;
   } /* hide poster on very small screens */
-  .detail-body {
-    padding-top: 8px;
-  }
 }
