@@ -642,74 +642,76 @@ const WatchList = () => {
                       className="wl-list-row"
                       style={{ animationDelay: `${Math.min(i * 35, 500)}ms` }}
                     >
-                      {/* Rank */}
-                      <span className="wl-list-rank">#{i + 1}</span>
+                      <div className="wl-list-main">
+                        {/* Rank */}
+                        <span className="wl-list-rank">#{i + 1}</span>
 
-                      {/* Poster */}
-                      <div className="wl-list-thumb">
-                        {movie.poster_path ? (
-                          <img
-                            src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
-                            alt={movie.title}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="wl-list-thumb-placeholder">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              style={{ opacity: 0.2 }}
-                            >
-                              <rect
-                                x="2"
-                                y="2"
-                                width="20"
-                                height="20"
-                                rx="2.18"
-                              />
-                              <line x1="7" y1="2" x2="7" y2="22" />
-                              <line x1="17" y1="2" x2="17" y2="22" />
-                              <line x1="2" y1="12" x2="22" y2="12" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Info */}
-                      <div className="wl-list-info">
-                        <h3 className="wl-list-title">{movie.title}</h3>
-                        <div className="wl-list-meta">
-                          <span className="wl-list-year">
-                            {movie.release_date?.split("-")[0]}
-                          </span>
-                          <span
-                            className={`wl-list-type wl-list-type--${movie.media_type}`}
-                          >
-                            <MediaIcon type={movie.media_type} />
-                            {movie.media_type === "tv" ? "TV" : "Movie"}
-                          </span>
-                          <span className="wl-list-rating">
-                            <svg
-                              width="10"
-                              height="10"
-                              viewBox="0 0 24 24"
-                              fill="#f5c518"
-                              stroke="none"
-                            >
-                              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-                            </svg>
-                            {movie.vote_average?.toFixed(1) ?? "—"}
-                          </span>
+                        {/* Poster */}
+                        <div className="wl-list-thumb">
+                          {movie.poster_path ? (
+                            <img
+                              src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                              alt={movie.title}
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="wl-list-thumb-placeholder">
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ opacity: 0.2 }}
+                              >
+                                <rect
+                                  x="2"
+                                  y="2"
+                                  width="20"
+                                  height="20"
+                                  rx="2.18"
+                                />
+                                <line x1="7" y1="2" x2="7" y2="22" />
+                                <line x1="17" y1="2" x2="17" y2="22" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                              </svg>
+                            </div>
+                          )}
                         </div>
-                        {movie.overview && (
-                          <p className="wl-list-overview">{movie.overview}</p>
-                        )}
+
+                        {/* Info */}
+                        <div className="wl-list-info">
+                          <h3 className="wl-list-title">{movie.title}</h3>
+                          <div className="wl-list-meta">
+                            <span className="wl-list-year">
+                              {movie.release_date?.split("-")[0]}
+                            </span>
+                            <span
+                              className={`wl-list-type wl-list-type--${movie.media_type}`}
+                            >
+                              <MediaIcon type={movie.media_type} />
+                              {movie.media_type === "tv" ? "TV" : "Movie"}
+                            </span>
+                            <span className="wl-list-rating">
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 24 24"
+                                fill="#f5c518"
+                                stroke="none"
+                              >
+                                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                              </svg>
+                              {movie.vote_average?.toFixed(1) ?? "—"}
+                            </span>
+                          </div>
+                          {movie.overview && (
+                            <p className="wl-list-overview">{movie.overview}</p>
+                          )}
+                        </div>
                       </div>
 
                       {/* Status + actions */}

@@ -432,7 +432,12 @@
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(59, 130, 246, 0.2);
 }
-
+.wl-list-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
 /* Rank number */
 .wl-list-rank {
   font-family: var(--font-display, "Bebas Neue", sans-serif);
@@ -840,13 +845,15 @@
     gap: 10px;
   }
   .wl-list-actions {
-    position: absolute;
-    right: 2vw;
-    top: 50%;
-    transform: translateY(-50%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
   }
   .wl-list-status-mod {
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
   }
   .wl-list-title {
