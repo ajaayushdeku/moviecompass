@@ -344,6 +344,11 @@
 .wl-chip--status:hover {
   background: rgba(59, 130, 246, 0.08);
 }
+.wl-chip--status-active {
+  background: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.15);
+  color: #fff;
+}
 
 /* ── Filter row divider ── */
 .wl-filter-divider {
@@ -771,9 +776,9 @@
    13. RESPONSIVE
 ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .wl-hero {
+  /* .wl-hero {
     padding: 3rem 5vw 2.5rem;
-  }
+  } */
   .wl-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
@@ -785,17 +790,16 @@
   .wl-stats-strip {
     padding: 0 5vw 22px;
   }
-
   .wl-filter-divider {
-    display: inline;
-    color: var(--border, rgba(255, 255, 255, 0.07));
+    display: block;
+    color: var(--border, rgb(255, 255, 255));
   }
 }
 
 @media (max-width: 480px) {
-  .wl-hero {
+  /* .wl-hero {
     padding: 2.5rem 4vw 2rem;
-  }
+  } */
   .wl-stats-strip,
   .wl-toolbar,
   .wl-filter-row,

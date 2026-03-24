@@ -15,7 +15,14 @@ const SORT_OPTIONS = [
 const FILTER_CHIPS = ["All", "Movies", "TV Shows"];
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "All", color: "var(--muted)" },
+  {
+    value: "all",
+    label: "All",
+    color: "#40b9ff",
+    // color: "#fff",
+    // background: "#3b82f6",
+    // borderColor: "rgba(59, 130, 246, 0.15)",
+  },
   { value: "unwatched", label: "Unwatched", color: "#3b82f6" },
   { value: "watching", label: "Watching", color: "#f59e0b" },
   { value: "watched", label: "Watched", color: "#22c55e" },
@@ -554,6 +561,8 @@ const WatchList = () => {
               style={
                 filterStatus === opt.value
                   ? {
+                      // borderColor:
+                      //   opt.value === "all" ? opt.borderColor : opt.color,
                       borderColor: opt.color,
                       color: opt.color,
                       background: `${opt.color}14`,

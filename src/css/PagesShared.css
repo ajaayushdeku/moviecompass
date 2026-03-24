@@ -622,6 +622,9 @@
 }
 
 @media (max-width: 480px) {
+  .page {
+    padding-top: 2rem;
+  }
   .page-hero {
     padding: 2.5rem 4vw 2rem;
   }
