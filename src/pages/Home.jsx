@@ -15,6 +15,7 @@ import {
 import MovieTrailerModal from "../components/MovieTrailerModal";
 import MediaIcon from "../components/MediaIcon";
 import { useMovieContext } from "../contexts/MovieContext";
+import formatDate from "../hooks/formatDate";
 
 /* ── quick-search suggestions ── */
 const HINTS = ["Inception", "Action", "2024", "Marvel", "Horror", "Sci-Fi"];
@@ -581,7 +582,9 @@ const Home = () => {
                   {nowPlayingBanner.vote_average?.toFixed(1)}
                 </span>
                 <span className="now-playing-rating">
-                  {nowPlayingBanner.release_date?.split("-")[0]}
+                  {nowPlayingBanner.release_date
+                    ? formatDate(nowPlayingBanner.release_date, true)()
+                    : "N/A"}
                 </span>
               </div>
 

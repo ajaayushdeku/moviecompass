@@ -328,7 +328,6 @@
   color: var(--red, #e50914);
 }
 .detail-trailer-label svg {
-  color: var(--red, #e50914);
   flex-shrink: 0;
 }
 

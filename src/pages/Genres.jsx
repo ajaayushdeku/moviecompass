@@ -255,6 +255,7 @@ const Genres = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [genreCount, setGenreCount] = useState(10);
 
   useEffect(() => {
     // Scroll to top when page loads
@@ -350,6 +351,16 @@ const Genres = () => {
   // TMDB genre IDs: movie-only IDs don't appear in TV list and vice versa
   // We keep all and just change the fetch source based on tab
   const displayedGenres = genres;
+
+  const hasMore = genreCount < displayedGenres.length;
+
+  const handleGenreLoadMore = () => {
+    setLoadingMore(true);
+    setTimeout(() => {
+      setGenreCount((prev) => Math.min(prev + 5, displayedGenres.length));
+      setLoadingMore(false);
+    }, 1500); // Simulate loading delay
+  };
 
   return (
     <div className="page genres-page">
@@ -472,17 +483,55 @@ const Genres = () => {
             ))}
           </div>
         ) : (
-          <div className="genres-grid">
-            {displayedGenres.map((genre, i) => (
-              <GenreCard
-                key={genre.id}
-                genre={genre}
-                isActive={selectedGenre?.id === genre.id}
-                onClick={() => handleGenreClick(genre)}
-                delay={Math.min(i * 45, 700)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="genres-grid">
+              {displayedGenres.slice(0, genreCount).map((genre, i) => (
+                <GenreCard
+                  key={genre.id}
+                  genre={genre}
+                  isActive={selectedGenre?.id === genre.id}
+                  onClick={() => handleGenreClick(genre)}
+                  delay={Math.min(i * 45, 700)}
+                />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "32px 0 8px",
+                }}
+              >
+                <button
+                  className="load-more-btn"
+                  onClick={handleGenreLoadMore}
+                  disabled={loadingMore}
+                >
+                  {loadingMore ? (
+                    <span className="load-more-spinner" />
+                  ) : (
+                    <>
+                      Load More{" "}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -557,7 +606,7 @@ const Genres = () => {
           )}
 
           {loadingResults ? (
-            <SkeletonGrid count={12} />
+            <SkeletonGrid count={14} />
           ) : results.length === 0 ? (
             <div className="empty-state" style={{ padding: "3rem 0" }}>
               <h3>No titles found</h3>

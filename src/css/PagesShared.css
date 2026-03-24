@@ -486,6 +486,7 @@
 
 .spotlight-meta-item {
   font-size: 0.78rem;
+  font-weight: bold;
   color: var(--muted);
   display: flex;
   align-items: center;

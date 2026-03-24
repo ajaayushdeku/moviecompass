@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useMovieContext } from "../contexts/MovieContext";
 import "../css/MovieDetailModal.css";
 import MediaIcon from "./MediaIcon";
+import formatDate from "../hooks/formatDate";
 
 const MovieDetailModal = ({ movie, onClose }) => {
   const {
@@ -15,6 +16,7 @@ const MovieDetailModal = ({ movie, onClose }) => {
   } = useMovieContext();
   const favorite = isFavorite(movie.id);
   const watchlisted = isWatchListed(movie.id);
+  const [overviewExpanded, setOverviewExpanded] = useState(false);
 
   const videos = movie.videos ?? [];
   const isTv = movie.media_type === "tv" || (!movie.title && !!movie.name);
@@ -31,6 +33,14 @@ const MovieDetailModal = ({ movie, onClose }) => {
     "-",
   )[0];
   const releaseDate = movie.release_date ?? movie.first_air_date ?? "—";
+  // const formattedDate = releaseDate
+  //   ? new Date(releaseDate).toLocaleDateString("en-US", {
+  //       year: "numeric",
+  //       month: "long",
+  //       day: "numeric",
+  //     })
+  //   : "N/A";
+  const formattedDate = releaseDate ? formatDate(releaseDate, false)() : "N/A";
   const posterSrc = movie.poster_path
     ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
     : null;
@@ -45,6 +55,11 @@ const MovieDetailModal = ({ movie, onClose }) => {
     : null;
   const mediaLabel = isTv ? "TV Series" : "Movie";
   const mediaClass = isTv ? "detail-badge--tv" : "detail-badge--movie";
+  const shortOverview = movie.overview?.slice(0, 320);
+  const overviewIsTruncated = (movie.overview?.length ?? 0) > 320;
+
+  console.log("Overview of actor:", movie.overview);
+  console.log("Overview is truncated:", overviewIsTruncated);
 
   /* ── Escape key closes ── */
   useEffect(() => {
@@ -73,6 +88,11 @@ const MovieDetailModal = ({ movie, onClose }) => {
     } else {
       const { status, ...cleanMovie } = movie;
       addWatchList(cleanMovie);
+      console.log(
+        "Check Status of Content's watchlist entry:",
+        status,
+        cleanMovie,
+      );
     }
   };
 
@@ -207,7 +227,7 @@ const MovieDetailModal = ({ movie, onClose }) => {
                 </div>
               )}
 
-              {releaseDate !== "—" && (
+              {formattedDate !== "—" && (
                 <div className="detail-stat">
                   <svg
                     width="13"
@@ -224,7 +244,7 @@ const MovieDetailModal = ({ movie, onClose }) => {
                     <line x1="8" y1="2" x2="8" y2="6" />
                     <line x1="3" y1="10" x2="21" y2="10" />
                   </svg>
-                  <span className="detail-stat-value">{releaseDate}</span>
+                  <span className="detail-stat-value">{formattedDate}</span>
                 </div>
               )}
 
@@ -259,7 +279,24 @@ const MovieDetailModal = ({ movie, onClose }) => {
 
             {/* Overview */}
             {movie.overview ? (
-              <p className="detail-overview">{movie.overview}</p>
+              <>
+                <p className="detail-overview">
+                  {overviewExpanded ? movie.overview : shortOverview}
+                  {!overviewExpanded && overviewIsTruncated && "…"}
+                </p>
+                {overviewIsTruncated && (
+                  <button
+                    type="button"
+                    className="actor-bio-toggle"
+                    style={{
+                      color: movie.media_type === "tv" ? "#4d8ce3" : "#e60914",
+                    }}
+                    onClick={() => setOverviewExpanded((v) => !v)}
+                  >
+                    {overviewExpanded ? "Show less ↑" : "Read more ↓"}
+                  </button>
+                )}
+              </>
             ) : (
               <p className="detail-overview detail-overview--empty">
                 No overview available.
@@ -338,7 +375,12 @@ const MovieDetailModal = ({ movie, onClose }) => {
         {/* ── Trailer section ── */}
         {trailer ? (
           <div className="detail-trailer-section">
-            <div className="detail-trailer-label">
+            <div
+              className="detail-trailer-label"
+              style={{
+                color: movie.media_type === "tv" ? "#4d8ce3" : "#e60914",
+              }}
+            >
               <svg
                 width="13"
                 height="13"

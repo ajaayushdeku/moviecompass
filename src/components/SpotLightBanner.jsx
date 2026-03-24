@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import MovieTrailerModal from "./MovieTrailerModal";
 import { useMovieContext } from "../contexts/MovieContext";
 import { getTvShowVideos } from "../services/api";
+import formatDate from "../hooks/formatDate";
 
 const SpotlightBanner = ({ show }) => {
   const [showTrailer, setShowTrailer] = useState(false);
@@ -26,8 +27,8 @@ const SpotlightBanner = ({ show }) => {
     if (!show?.id) return;
 
     let cancelled = false;
-    setVideos([]);
-    setLoadingVideos(true);
+    // setVideos([]);
+    // setLoadingVideos(true);
 
     getTvShowVideos(show.id)
       .then((results) => {
@@ -119,7 +120,9 @@ const SpotlightBanner = ({ show }) => {
             {show.vote_average?.toFixed(1)}
           </span>
           <span className="spotlight-meta-item">
-            {show.first_air_date?.split("-")[0]}
+            {show.first_air_date
+              ? formatDate(show.first_air_date, true)()
+              : "N/A"}
           </span>
           {show.origin_country?.[0] && (
             <span className="spotlight-meta-item">

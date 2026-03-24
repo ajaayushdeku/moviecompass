@@ -50,7 +50,14 @@ const MovieCard = ({ movie }) => {
 
   return (
     <>
-      <div className="movie-card">
+      <div
+        className="movie-card"
+        style={{
+          "--box-shadow-color": isTv
+            ? "rgba(9, 71, 229, 0.25)"
+            : "rgba(229, 9, 20, 0.25)",
+        }}
+      >
         {/* ── Poster ── */}
         <div
           className="movie-poster"
