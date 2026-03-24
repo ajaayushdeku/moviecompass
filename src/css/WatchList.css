@@ -230,6 +230,7 @@
   font-size: 0.75rem;
   color: var(--muted, #7a7a9a);
   white-space: nowrap;
+  margin-right: 0.5rem;
 }
 .wl-sort-select {
   background: rgba(255, 255, 255, 0.05);
@@ -820,12 +821,16 @@
     width: 30%;
     min-width: calc(50% - 3px);
   }
+  .wl-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
   .wl-sort-select {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
+    width: fit-content;
   }
   .wl-search-wrap {
     max-width: 100%;

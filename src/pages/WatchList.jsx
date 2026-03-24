@@ -456,18 +456,20 @@ const WatchList = () => {
 
         {/* Sort + view toggle */}
         <div className="wl-toolbar-right">
-          <span className="wl-sort-label">Sort</span>
-          <select
-            className="wl-sort-select"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+          <span>
+            <span className="wl-sort-label">Sort</span>
+            <select
+              className="wl-sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </span>
 
           {/* Grid / List toggle */}
           <div className="wl-view-toggle">

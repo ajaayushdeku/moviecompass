@@ -337,18 +337,20 @@ const Favorites = () => {
 
         {/* Sort + view toggle */}
         <div className="fav-toolbar-right">
-          <span className="fav-sort-label">Sort</span>
-          <select
-            className="fav-sort-select"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+          <span>
+            <span className="fav-sort-label">Sort</span>
+            <select
+              className="fav-sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </span>
 
           {/* Grid / List toggle */}
           <div className="fav-view-toggle">
