@@ -820,7 +820,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 85%;
+    width: 100%;
   }
   .wl-search-wrap {
     max-width: 100%;
@@ -834,8 +834,32 @@
   .wl-list-overview {
     display: none;
   }
-
+  .wl-list-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .wl-list-actions {
+    position: absolute;
+    right: 2vw;
+    top: 50%;
+    transform: translateY(-50%);
+  }
   .wl-list-status-mod {
     flex-direction: column;
+    gap: 10px;
+  }
+  .wl-list-title {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 360px) {
+  .wl-list-title {
+    font-size: 0.75rem;
+    width: 90%;
   }
 }

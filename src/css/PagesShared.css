@@ -196,19 +196,29 @@
   letter-spacing: 1.2px;
   color: var(--text);
 }
-
-.section-link {
-  font-size: 0.75rem;
+.section-info-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.section-count {
+  font-size: 0.73rem;
   color: var(--muted);
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 0.2s;
+}
+
+.back-btn {
+  margin-left: 12px;
   background: none;
   border: none;
-  font-family: var(--font-body);
-}
-.section-link:hover {
   color: var(--red);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  padding: 0;
+  transition: opacity 0.2s;
+}
+.back-btn:hover {
+  opacity: 0.75;
 }
 
 /* ══ CARD GRID ═══════════════════════════ */
@@ -503,7 +513,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 10px 22px;
+  padding: 8px 22px;
   background: var(--red);
   color: #fff;
   border: none;
@@ -642,6 +652,35 @@
   .stat-pills {
     padding: 0 4vw 22px;
   }
+
+  /* Action buttons — icon only at 360px by hiding text labels */
+  .btn-primary .btn-label,
+  .btn-ghost .btn-label {
+    font-size: 0.75rem;
+  }
+  .btn-primary,
+  .btn-ghost {
+    padding: 9px 20px;
+  }
+  .spotlight-actions .action-label {
+    display: none;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+  /* Section headers */
+  .section-info-wrap {
+    gap: 0px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .back-btn {
+    margin-left: 8px;
+    font-size: 0.65rem;
+    width: fit-content;
+  }
 }
 /* ── 360px — Samsung S8+ ─────────────── */
 @media (max-width: 360px) {
@@ -690,7 +729,7 @@
     margin-bottom: 12px;
   }
   .section-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   /* Stat pills — 2 per row still, just smaller */
@@ -765,17 +804,13 @@
     max-width: 100%;
   }
 
-  /* Action buttons — icon only at 360px by hiding text labels */
   .btn-primary .btn-label,
   .btn-ghost .btn-label {
-    display: none;
+    font-size: 0.7rem;
   }
-  .btn-primary,
-  .btn-ghost {
-    padding: 9px 20px;
-  }
-  .spotlight-actions .action-label {
-    display: none;
+
+  .btn-primary {
+    padding: 7px 10px;
   }
 
   /* Divider */

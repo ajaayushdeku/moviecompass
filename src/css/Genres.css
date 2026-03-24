@@ -155,6 +155,16 @@
     gap: 10px;
   }
   .featured-genre-name {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+  }
+  .featured-genre-card {
+    height: 75px;
+  }
+  .genre-card {
+    height: 65px;
+    width: 100%;
+  }
+  .genre-card-name {
+    font-size: 0.85rem;
   }
 }

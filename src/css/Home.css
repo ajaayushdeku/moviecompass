@@ -403,32 +403,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   5. SECTION HEADER
-───────────────────────────────────────────────────────────────── */
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-.section-title {
-  font-family: var(--font-display, "Bebas Neue", sans-serif);
-  font-size: 1.55rem;
-  letter-spacing: 1.2px;
-  color: var(--text, #e8e8f0);
-}
-.section-info-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.section-count {
-  font-size: 0.73rem;
-  color: var(--muted);
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   6. MOVIES GRID
+   5. MOVIES GRID
 ───────────────────────────────────────────────────────────────── */
 .movies-section {
   padding: 0 5vw;
@@ -441,7 +416,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   7. NOW PLAYING BANNER
+   6. NOW PLAYING BANNER
 ───────────────────────────────────────────────────────────────── */
 .now-playing-banner {
   position: relative;
@@ -527,7 +502,7 @@
 } */
 
 /* ─────────────────────────────────────────────────────────────────
-   8. STATE VIEWS
+   7. STATE VIEWS
 ───────────────────────────────────────────────────────────────── */
 
 /* ── Error banner ── */
@@ -621,7 +596,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   9. LOAD MORE BUTTON
+   8. LOAD MORE BUTTON
 ───────────────────────────────────────────────────────────────── */
 .load-more-wrap {
   display: flex;
@@ -666,25 +641,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   10. BACK BUTTON
-───────────────────────────────────────────────────────────────── */
-.back-btn {
-  margin-left: 12px;
-  background: none;
-  border: none;
-  color: var(--red);
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-family: var(--font-body);
-  padding: 0;
-  transition: opacity 0.2s;
-}
-.back-btn:hover {
-  opacity: 0.75;
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   11. ANIMATIONS
+   9. ANIMATIONS
 ───────────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
   from {
@@ -721,7 +678,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   12. RESPONSIVE
+   10. RESPONSIVE
 ───────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .hero {
@@ -746,32 +703,40 @@
 
 /* ── 480px — phone portrait ───────────────────────────────────── */
 @media (max-width: 480px) {
-  /* Hero */
+  /* Hero — tighten further */
   .hero {
-    padding: 2.5rem 4vw 2rem;
+    padding: 2rem 4vw 1.5rem;
+  }
+  .hero-sub {
+    font-size: 0.82rem;
   }
 
   /* Search bar — shrink to fit, keep Submit button visible */
   .search-section {
     max-width: 100%;
     margin-top: 24px;
-    padding: 0 4vw;
   }
   .search-icon {
     padding: 0 8px 0 12px;
   }
   .search-input {
-    font-size: 0.85rem;
-    padding: 13px 4px;
+    font-size: 0.82rem;
+    padding: 12px 2px;
   }
   .search-button {
-    padding: 9px 12px;
+    padding: 8px 8px;
+    margin: 4px;
     font-size: 0.78rem;
     gap: 4px;
   }
   .search-button span {
     display: none;
   } /* hide "Search" label, keep icon only */
+  .search-clear-btn {
+    width: 20px;
+    height: fit-content;
+    font-size: 0.9rem;
+  }
   .search-hints {
     gap: 6px;
     margin-top: 10px;
@@ -793,24 +758,6 @@
     display: none;
   }
 
-  /* Section headers */
-  .section-header {
-    padding: 0 4vw;
-    margin-bottom: 12px;
-  }
-  .section-title {
-    font-size: 1.3rem;
-  }
-  .section-info-wrap {
-    gap: 0px;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .back-btn {
-    margin-left: 8px;
-    font-size: 0.65rem;
-    width: fit-content;
-  }
   .movies-section {
     padding: 0 4vw;
   }
@@ -821,7 +768,7 @@
   /* Grid — 2 columns, tighter gap */
   .movies-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
 
   /* Now Playing banner — stack layout for narrow screens */
@@ -840,7 +787,7 @@
     );
   }
   .now-playing-content {
-    padding: 16px;
+    padding: 12px 14px;
   }
   .now-playing-eyebrow {
     font-size: 0.58rem;
@@ -848,8 +795,7 @@
     margin-bottom: 6px;
   }
   .now-playing-title {
-    font-size: 1.35rem;
-    margin-bottom: 6px;
+    font-size: 1.2rem;
   }
   .now-playing-desc {
     font-size: 0.7rem;
@@ -869,54 +815,36 @@
   }
 }
 
-/* ── 360px — Samsung S8+ and similar small phones ─────────────── */
 @media (max-width: 360px) {
-  /* Hero — tighten further */
-  .hero {
-    padding: 2rem 4vw 1.5rem;
-  }
-  .hero-sub {
-    font-size: 0.82rem;
-  }
-
-  /* Search — icon-only submit button, full-width form */
+  /* Search bar — shrink to fit, keep Submit button visible */
   .search-section {
-    padding: 0 3vw;
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 0 0vw;
+  }
+  .search-icon {
+    padding: 0 6px 0 10px;
   }
   .search-input {
-    font-size: 0.82rem;
-    padding: 12px 2px;
-  }
-  .search-clear-btn {
-    width: 32px;
-    height: 32px;
+    font-size: 0.78rem;
+    padding: 10px 2px;
   }
   .search-button {
-    padding: 8px 10px;
-    margin: 4px;
+    padding: 6px 6px;
+
+    width: 28px;
+  }
+  .search-clear-btn {
+    width: 20px;
+    height: fit-content;
+    font-size: 0.85rem;
+  }
+  .search-hints {
+    gap: 6px;
+    margin-top: 10px;
   }
   .hint-chip {
-    font-size: 0.7rem;
-  } /* too cramped at 360px */
-
-  /* Grid — 2 columns with minimal gap */
-  .movies-grid {
-    gap: 8px;
-  }
-
-  .section-title {
-    font-size: 1.2rem;
-  }
-
-  .back-btn {
-    font-size: 0.7rem;
-  }
-
-  /* Now Playing banner */
-  .now-playing-content {
-    padding: 12px 14px;
-  }
-  .now-playing-title {
-    font-size: 1.2rem;
+    font-size: 0.6rem;
+    padding: 4px 10px;
   }
 }

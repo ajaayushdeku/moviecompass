@@ -254,7 +254,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 18px;
+  padding: 8px 18px;
   border-radius: 9px;
   font-family: var(--font-body, "DM Sans", sans-serif);
   font-size: 0.83rem;
@@ -399,13 +399,25 @@
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .detail-backdrop {
     align-items: center;
-    padding: 0 2px;
+    padding: 0 4px;
   }
 
   .detail-poster-wrap {
     display: none;
   } /* hide poster on very small screens */
+}
+
+@media (max-width: 360px) {
+  .detail-trailer-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .detail-fav-btn,
+  .detail-watchlist-btn {
+    padding: 7px 10px;
+    font-size: 0.75rem;
+  }
 }

@@ -473,17 +473,17 @@
 .actor-grid-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: baseline;
+  margin-bottom: 18px;
 }
 .actor-back-link {
+  margin-left: 12px;
   background: none;
   border: none;
-  color: var(--red, #e50914);
-  font-family: var(--font-body, "DM Sans", sans-serif);
-  font-size: 0.78rem;
-  font-weight: 600;
+  color: var(--red);
   cursor: pointer;
+  font-size: 0.75rem;
+  font-family: var(--font-body);
   padding: 0;
   transition: opacity 0.2s;
 }
@@ -525,7 +525,32 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   7. PROFILE VIEW
+   7. SHARED SECTION HEADER
+───────────────────────────────────────────────────────────────── */
+.actor-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.actor-section-title {
+  font-family: var(--font-display, "Bebas Neue", sans-serif);
+  font-size: 1.55rem;
+  letter-spacing: 1.2px;
+  color: var(--text, #e8e8f0);
+}
+.actor-section-info-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.actor-section-count {
+  font-size: 0.73rem;
+  color: var(--muted, #7a7a9a);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   8. PROFILE VIEW
 ───────────────────────────────────────────────────────────────── */
 .actor-profile-view {
   margin-top: 2rem;
@@ -1002,26 +1027,6 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   8. SHARED SECTION HEADER
-───────────────────────────────────────────────────────────────── */
-.actor-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-.actor-section-title {
-  font-family: var(--font-display, "Bebas Neue", sans-serif);
-  font-size: 1.55rem;
-  letter-spacing: 1.2px;
-  color: var(--text, #e8e8f0);
-}
-.actor-section-count {
-  font-size: 0.73rem;
-  color: var(--muted, #7a7a9a);
-}
-
-/* ─────────────────────────────────────────────────────────────────
    9. STATE VIEWS
 ───────────────────────────────────────────────────────────────── */
 .actor-loading-state {
@@ -1080,6 +1085,54 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
+   CREDIT CARD — PLAY BUTTON OVERRIDES
+───────────────────────────────────────────────────────────────── */
+
+/* Show overlay on credit card hover instead of movie-card hover */
+.actor-credit-card .play-overlay {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.actor-credit-card:hover .play-overlay {
+  opacity: 1;
+}
+
+/* Slightly smaller circle to fit the narrower credit card width */
+.actor-credit-card .play-btn-circle {
+  width: 44px;
+  height: 44px;
+  background: rgba(229, 9, 20, 0.88);
+  box-shadow:
+    0 0 0 6px rgba(229, 9, 20, 0.18),
+    0 4px 18px rgba(0, 0, 0, 0.65);
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.actor-credit-card .play-btn-circle:hover {
+  background: var(--red, #e50914);
+  transform: scale(1.12);
+}
+
+/* Keep the optical centering on the play triangle */
+.actor-credit-card .play-btn-circle svg {
+  margin-left: 3px;
+}
+
+/* Spinner inside the play circle while videos are loading */
+.actor-credit-card .play-btn-circle span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: actorSpin 0.7s linear infinite;
+  /* margin-left intentionally 0 — spinner is symmetric, no optical offset needed */
+  margin-left: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
    10. ANIMATIONS
 ───────────────────────────────────────────────────────────────── */
 @keyframes actorFadeUp {
@@ -1118,10 +1171,6 @@
 
 /* ─────────────────────────────────────────────────────────────────
    11. RESPONSIVE
-   Breakpoints:
-     700px — profile hero switches to vertical stack
-     480px — phone portrait
-     360px — Samsung S8+ and similar small phones
 ───────────────────────────────────────────────────────────────── */
 
 /* ── 700px ── */
@@ -1170,63 +1219,94 @@
 @media (max-width: 480px) {
   /* Search bar */
   .actor-search-wrap {
-    padding: 0 4vw 24px;
+    padding: 0 2vw 18px;
   }
-  /* Prevent iOS auto-zoom — triggered when input font-size < 16px */
+  .actor-search-section {
+    max-width: 100%;
+    margin-top: 24px;
+    padding: 0 3vw;
+  }
+  .actor-search-icon {
+    padding: 0 8px 0 12px;
+  }
   .actor-search-input {
-    font-size: 1rem;
+    font-size: 0.82rem;
+    padding: 12px 2px;
   }
-  /* Hide "Search" label text — keep icon for compact button */
+  .actor-search-btn {
+    padding: 8px 8px;
+    margin: 4px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
   .actor-search-btn span {
     display: none;
   }
-  .actor-search-btn {
-    padding: 9px 12px;
+  .actor-search-clear {
+    width: 20px;
+    height: fit-content;
+    font-size: 0.9rem;
   }
 
   /* Grids — 2 columns */
   .actor-grid-section,
   .actor-photos-section,
   .actor-credits-section {
-    padding-left: 4vw;
-    padding-right: 4vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
   }
   .actor-people-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
   .actor-credits-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  /* Grid card — smaller photo circle so name/dept has room */
-  .actor-grid-photo {
-    width: 80px;
-    height: 80px;
-  }
-  .actor-grid-card {
-    padding: 14px 10px 12px;
     gap: 8px;
   }
-  .actor-grid-name {
-    font-size: 0.8rem;
+  .actor-section-info-wrap {
+    gap: 0px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .actor-back-link {
+    margin-left: 8px;
+    font-size: 0.65rem;
+    width: fit-content;
+  }
+  .actor-section-title {
+    font-size: 1.2rem;
+  }
+  .actor-grid-header {
+    gap: 4px;
   }
 
+  /* Grid card */
+  .actor-grid-card {
+    padding: 12px 8px 10px;
+    gap: 6px;
+  }
+  .actor-grid-photo {
+    width: 70px;
+    height: 70px;
+  }
+  .actor-grid-name {
+    font-size: 0.74rem;
+  }
+  .actor-grid-dept {
+    font-size: 0.58rem;
+  }
+  .actor-grid-known {
+    display: none;
+  } /* too cramped — hide known-for text */
+  .actor-grid-pop {
+    font-size: 0.58rem;
+    padding: 1px 5px;
+    top: 5px;
+    right: 5px;
+  }
   .actor-back-btn {
     padding: 6px 0;
     font-size: 0.7rem;
-  }
-
-  /* Stats strip — 2×2 grid */
-  .actor-stats-strip {
-    padding: 20px 4vw;
-    gap: 8px;
-  }
-  .actor-stats-pill {
-    flex: 0 0 calc(50% - 4px);
-    min-width: unset;
-    padding: 10px 12px;
   }
 
   /* Photos strip */
@@ -1262,60 +1342,48 @@
   }
 }
 
-/* ── 360px — Samsung S8+ ── */
 @media (max-width: 360px) {
-  /* Search bar */
   .actor-search-wrap {
     padding: 0 3vw 18px;
   }
+  .actor-search-section {
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 0 0vw;
+  }
   .actor-search-icon {
-    padding: 0 8px 0 10px;
+    padding: 0 6px 0 10px;
   }
   .actor-search-input {
-    padding: 12px 4px;
+    font-size: 0.78rem;
+    padding: 10px 2px;
   }
   .actor-search-btn {
-    padding: 8px 10px;
-    margin: 4px;
+    padding: 6px 6px;
+
+    width: 28px;
+  }
+  .actor-search-clear {
+    width: 20px;
+    height: fit-content;
+    font-size: 0.85rem;
   }
 
-  /* Browse grid — tighter gaps */
+  /* Grids — 2 columns */
   .actor-grid-section,
   .actor-photos-section,
   .actor-credits-section {
-    padding-left: 3vw;
-    padding-right: 3vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
   }
-  .actor-people-grid {
-    gap: 8px;
-  }
-  .actor-credits-grid {
-    gap: 8px;
+  /* Section headers */
+  .actor-section-title {
+    font-size: 1rem;
   }
 
-  /* Grid card — at 360px each card is ~148px wide */
-  .actor-grid-card {
-    padding: 12px 8px 10px;
-    gap: 6px;
-  }
-  .actor-grid-photo {
-    width: 70px;
-    height: 70px;
-  }
-  .actor-grid-name {
-    font-size: 0.74rem;
-  }
-  .actor-grid-dept {
-    font-size: 0.58rem;
-  }
-  .actor-grid-known {
-    display: none;
-  } /* too cramped — hide known-for text */
-  .actor-grid-pop {
-    font-size: 0.58rem;
-    padding: 1px 5px;
-    top: 5px;
-    right: 5px;
+  .actor-back-btn {
+    padding: 6px 0;
+    font-size: 0.6rem;
   }
 
   /* Stats strip */
@@ -1330,7 +1398,7 @@
     font-size: 0.9rem;
   }
   .actor-stats-label {
-    font-size: 0.56rem;
+    font-size: 0.55rem;
   }
 
   /* Profile hero */
@@ -1344,17 +1412,20 @@
   .actor-name {
     font-size: 2rem;
   }
-  .actor-bio {
-    font-size: 0.8rem;
+  .actor-popularity-badge {
+    font-size: 0.62rem;
+    padding: 3px 8px;
   }
-
-  /* Section headers */
-  .actor-section-title {
-    font-size: 1.25rem;
+  .actor-bio,
+  .actor-stat {
+    font-size: 0.7rem;
   }
-  .actor-grid-header {
-    flex-direction: column;
-    gap: 4px;
+  .actor-aliases-label,
+  .actor-alias-chip {
+    font-size: 0.62rem;
+  }
+  .actor-bio-toggle {
+    font-size: 0.7rem;
   }
 
   /* Photos strip */
@@ -1366,57 +1437,6 @@
   /* Load more */
   .actor-load-more-btn {
     padding: 9px 20px;
-    font-size: 0.82rem;
+    font-size: 0.7rem;
   }
-}
-
-/* ─────────────────────────────────────────────────────────────────
-   CREDIT CARD — PLAY BUTTON OVERRIDES
-   The base .play-overlay and .play-btn-circle come from MovieCard.css
-   but they're triggered by .movie-card:hover. Credit cards use
-   .actor-credit-card as the parent, so we remap the hover trigger here.
-───────────────────────────────────────────────────────────────── */
-
-/* Show overlay on credit card hover instead of movie-card hover */
-.actor-credit-card .play-overlay {
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-.actor-credit-card:hover .play-overlay {
-  opacity: 1;
-}
-
-/* Slightly smaller circle to fit the narrower credit card width */
-.actor-credit-card .play-btn-circle {
-  width: 44px;
-  height: 44px;
-  background: rgba(229, 9, 20, 0.88);
-  box-shadow:
-    0 0 0 6px rgba(229, 9, 20, 0.18),
-    0 4px 18px rgba(0, 0, 0, 0.65);
-  transition:
-    transform 0.2s,
-    background 0.2s;
-}
-.actor-credit-card .play-btn-circle:hover {
-  background: var(--red, #e50914);
-  transform: scale(1.12);
-}
-
-/* Keep the optical centering on the play triangle */
-.actor-credit-card .play-btn-circle svg {
-  margin-left: 3px;
-}
-
-/* Spinner inside the play circle while videos are loading */
-.actor-credit-card .play-btn-circle span {
-  display: block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: actorSpin 0.7s linear infinite;
-  /* margin-left intentionally 0 — spinner is symmetric, no optical offset needed */
-  margin-left: 0;
 }

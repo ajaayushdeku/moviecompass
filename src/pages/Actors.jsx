@@ -409,18 +409,22 @@ const Actors = () => {
         {/* Section header */}
         <div className="actor-grid-header">
           <h2 className="actor-section-title">{gridTitle}</h2>
-          <div className="actor-section-count">
-            {gridItems.length} people
-            {view === "grid" && (
-              <button
-                type="button"
-                className="actor-back-link"
-                onClick={handleClear}
-              >
-                ← Popular People
-              </button>
-            )}
-          </div>
+
+          <span className="actor-section-info-wrap">
+            <div className="actor-section-count">{gridItems.length} people</div>
+
+            <p className="actor-section-eyebrow">
+              {view === "grid" && (
+                <button
+                  type="button"
+                  className="actor-back-link"
+                  onClick={handleClear}
+                >
+                  ← Popular People
+                </button>
+              )}
+            </p>
+          </span>
         </div>
 
         {/* Error */}
